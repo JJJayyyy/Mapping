@@ -1,0 +1,25 @@
+
+INPUT(g1)
+INPUT(g2)
+
+#OUTPUT(3)
+OUTPUT(g4)
+#OUTPUT(5)
+#OUTPUT(6)
+#OUTPUT(7)
+#OUTPUT(8)
+#OUTPUT(9)
+#OUTPUT(10)
+#OUTPUT(11)
+
+
+
+g3 = AND(g1, g2)
+g4 = NAND(g1, g3)
+#5 = OR(g1, g2)
+#6 = NOR(g1, g2)
+#7 = XOR(g1, g2)
+#8 = XNOR(g1, g2)
+#9 = NOT(g1)
+#10 = DFF(g1)
+#11 = SDFF(g1)
