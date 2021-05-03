@@ -1,0 +1,85 @@
+*** D- flip flop input gate ****
+*** Inputs nodes : 7 ***
+****Output node : 15 ******
+****Clock input : 12  ******
+
+L5   8   7    6pH
+L6   9   10   13.9pH
+L7   12  13   4pH
+L8   10  11   8pH
+L9   11  14   4pH
+L10  14  15   4pH
+
+B5   8   9   jjmitll100 area=0.7
+RB5  8   9   13.8 
+B6   9   0   jjmitll100 area=1.15
+RB6  9   0   8.43 
+B7   10  0   jjmitll100 area=1.11
+RB7  10  0   8.73
+B8   13  10  jjmitll100 area=0.8
+RB8  13  10  12.125
+B9   11  0   jjmitll100 area=1.30
+RB9  11  0   7.46
+B10  14  0   jjmitll100 area=1.30
+RB10 14  0   7.46
+B11  15  0   jjmitll100 area=1.30
+RB11 15  0   7.46
+B23  7   0   jjmitll100 area=1.5
+RB23 7   0   6.46
+
+VinB 7  0 pwl (0 0 100p 0 102p 827.13u 105p 0 130p 0 132p 827.13u 135p 0 300p 0 302p 827.13u 305p 0)
+VinC 12 0 pwl (0 0 50p 0 52p 827.13u 55p 0 150p 0 152p 827.13u 155p 0 250p 0 252p 827.13u 255p 0 350p 0 352p 827.13u 355p 0 450p 0 452p 827.13u 455p 0)
+
+* Bias source 2.5mV and 7.41 Ohm
+IB2 0 9  pwl(0 0 5p 105uA)
+IB3 0 11 pwl(0 0 5p 100uA)
+IB4 0 14 pwl(0 0 5p 100uA)
+
+.model jjmitll100 jj(rtype=1, vg=2.8mV, cap=0.07pF, r0=160, rn=16, icrit=0.1mA)
+
+.tran 1p 600p
+
+.print nodev 7 0
+**.print nodev 8 0
+**.print nodev 9 0
+**.print nodev 10 0
+**.print nodev 11 0
+.print nodev 12 0
+**.print nodev 13 0
+**.print nodev 14 0
+.print nodev 15 0
+
+.print devi VinC
+.print devi VinB
+
+
+.print devi ib2
+.print devi ib3
+
+
+.print devi b5 JJALL
+.print devi rb5
+.print devi b6 JJALL
+.print devi rb6
+.print devi b7 JJALL
+.print devi rb7
+.print devi b8 JJALL
+.print devi rb8
+.print devi b9 JJALL
+.print devi rb9
+
+.print devi l5
+.print devi l6
+.print devi l7
+.print devi l8
+.print devi l9
+.print devi l10
+
+
+.print phase b5
+.print phase b6
+.print phase b7
+.print phase b8
+.print phase b9
+
+

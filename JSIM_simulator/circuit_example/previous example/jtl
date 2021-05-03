@@ -1,0 +1,32 @@
+****** JTL gate ******
+****Input node : 1,2 *****
+******Output node : 11 ******
+**** Clock input : 10 *****
+
+***************** JTL Starts*************
+*.SUBCKT JTL 1
+
+L1   1  2  8pH
+L2   2  3  8pH
+
+B1   2  0  jjmitll100 area=1.30
+RB1  2  0  7.46
+B2   3  0  jjmitll100 area=1.30
+RB2  3  0  7.46
+
+* Bias source 2.5mV and 7.41 Ohm
+IB1  0  2  pwl(0 0 5p 100uA)
+IB2  0  3  pwl(0 0 5p 100uA)
+
+.model jjmitll100 jj(rtype=1, vg=2.8mV, cap=0.07pF, r0=160, rn=16, icrit=0.1mA)
+*.ends JTL
+***************** JTL ends ****************
+
+VinA  1 0  pwl (0 0 200p 0 202p 827.13u 205p 0 300p 0 302p 827.13u 305p 0)
+
+.tran 0.1p 600p
+.print nodev 1 0
+.print nodev 2 0
+.print nodev 3 0
+
+

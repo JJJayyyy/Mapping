@@ -1,0 +1,70 @@
+*** OR 2 input gate ****
+*** Inputs nodes : 1 ,2 ***
+****Output node : 11 ******
+****Clock input : 12  ******
+***************** OR3 gate *************
+.SUBCKT OR3 1 2 3 11 12
+
+L1   1  14   4pH
+L2   2  4   4pH
+L3   5  7   0.9pH
+L4   6  7   0.9pH
+L5   7  8   9.3pH
+L6   9  10  13.9pH
+L7   12 13  4pH
+L8   10 11  8pH
+
+L9   3  15   4pH
+L10   16  7   0.9pH
+B10   15   0   jjmitll100 area=1.57 
+RB10  15   0   6.17
+B11   15   16   jjmitll100 area=1.08
+RB11  15   16   8.98 
+
+B1   14   0   jjmitll100 area=1.57 
+RB1  14   0   6.17
+B2   4   0   jjmitll100 area=1.57
+RB2  4   0   6.17 
+B3   14   5   jjmitll100 area=1.08
+RB3  14   5   8.98 
+B4   4   6   jjmitll100 area=1.08
+RB4  4   6   8.98 
+B5   8   9   jjmitll100 area=0.9
+RB5  8   9   10.7 
+B6   9   0   jjmitll100 area=1.15
+RB6  9   0   8.43 
+B7   10  0   jjmitll100 area=1.11
+RB7  10  0   8.73
+B8   13  10  jjmitll100 area=0.8
+RB8  13  10  12.125 
+B9   11  0   jjmitll100 area=1.30
+RB9  11  0   7.46
+
+* Bias source 2.5mV and 7.41 Ohm
+* node 7 is the split point, so it has the large current
+IB1 0 7  pwl(0 0 5p 168uA)
+IB2 0 9  pwl(0 0 5p 105uA)
+IB3 0 11 pwl(0 0 5p 100uA)
+
+.model jjmitll100 jj(rtype=1, vg=2.8mV, cap=0.07pF, r0=160, rn=16, icrit=0.1mA)
+.ends OR3
+*****************************************
+
+***************** netlist ****************
+X1 OR3 1 2 3 5 10
+*****************************************
+
+***************** simulation ****************
+Vin_A  1  0  pwl (0 0 100p 0 102p 827.13u 105p 0 400p 0 402p 827.13u 405p 0 500p 0 502p 827.13u 505p 0 700p 0 702p 827.13u 705p 0)
+Vin_B  2  0  pwl (0 0 200p 0 202p 827.13u 205p 0 400p 0 402p 827.13u 405p 0 600p 0 602p 827.13u 605p 0 700p 0 702p 827.13u 705p 0)
+Vin_C  3  0  pwl (0 0 300p 0 302p 827.13u 305p 0 500p 0 502p 827.13u 505p 0 600p 0 602p 827.13u 605p 0 700p 0 702p 827.13u 705p 0)
+Vin_Clock 10 0  pwl (0 0 50p 0 52p 827.13u 55p 0 150p 0 152p 827.13u 155p 0 250p 0 252p 827.13u 255p 0 350p 0 352p 827.13u 355p 0 450p 0 452p 827.13u 455p 0 550p 0 552p 827.13u 555p 0 650p 0 652p 827.13u 655p 0 750p 0 752p 827.13u 755p 0)
+
+.tran 0.1p 800p
+
+.print nodev 1 0
+.print nodev 2 0
+.print nodev 3 0
+.print nodev 5 0
+.print nodev 10 0
+

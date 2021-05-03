@@ -1,63 +1,184 @@
 #include <iostream>
 #include "circuit.h"
-//#include "circuit_cut.cpp"
+#include "circuit_cut.cpp"
+
 using namespace std;
-vector<vector<node*>> K_feasible_Cut(node* cur_node, int k);
-void node_constructor(circuit* new_circuit, vector<string>& cutPI, node* cur_node, node* new_node);
-circuit* cutCircuit(circuit* bench, vector<string>& cutPI, node* rootNode, string& name);
+void mapping(circuit* bench);
+void Test_K_feasible_Cut(circuit* bench);
+void Test_CutLUT_To_Circuit(circuit* bench);
 
 
 int main(int argc, char *argv[]) {
 //    circuit *bench = new circuit("../circuit/s9234.bench", true);
 //    circuit *bench = new circuit("../circuit/sim_test.bench", true);
-    circuit *bench = new circuit("../circuit/c17.bench", true);
-//    circuit *bench = new circuit("../circuit/s27.bench", true);
+//    circuit *bench = new circuit("../circuit/c17.bench", true);
+    circuit *bench = new circuit("../circuit/s27.bench", true);
 
-    bench->pc();
-    float x = bench->errorRateCal();
-    cout << "EDP : "  << bench->max_lvl*x;
+    float circuit_EDP = bench->errorRateCal()*(float)bench->Poutput[0]->level;;
+    cout << "bench_EDP: " << circuit_EDP << endl;
+//    bench->pc();
+    Test_K_feasible_Cut(bench);
+//    mapping(bench);
+//    bench->Levelization();
+//    bench->depth_balancing();
+//    circuit_EDP = bench->errorRateCal()*(float)bench->Poutput[0]->level;;
+//    cout << "bench_EDP: " << circuit_EDP << endl;
 
-    for(auto cur : bench->Poutput){
-        cout << cur->node_name << endl;
-//        if(cur->level > 2){
-            int idx = 0;
-            vector<vector<node*>>cutList = K_feasible_Cut(cur,4);
-            circuit *minEDP_cut = nullptr;
-            float minEDP = 1;
-            for(int j=0; j<1; j++){
-                string name = cur->node_name;
-                name.append("_cut_");
-                name.append(to_string(idx));
-                idx++;
-                vector<string> namelist;
-                for(auto i : cutList[j]) namelist.push_back(i->node_name);
-//                cout <<endl << name << endl;
-//                cout << "\ncut circuit PI: " << endl;
-//                for(auto i : namelist) cout << i << " ";
-//                cout << endl;
-                circuit* cut = cutCircuit(bench, namelist, cur, name);
-                cut->levelization();
-                minEDP = (minEDP < cut->errorRateCal()) ? minEDP*cut->Poutput[0]->level : cut->errorRateCal()* cut->Poutput[0]->level;
-                minEDP_cut = (minEDP < cut->errorRateCal()) ? cut : minEDP_cut;
-            }
-//             cout << "cut circuit: " << minEDP_cut->circuit_name << "EDP: " << minEDP << endl;
-//            vector<string> s = minEDP_cut->LUTtoQM();
-        cout << "start replacing" << endl;
-        bench->replaceCutwithQM(cutList[3], cur);
-        bench->levelization();
+    return 0;
+}
+
+
+void Test_K_feasible_Cut(circuit* bench){
+    for(auto& root_node : bench->Node_list){
+        if(root_node->node_name[0] == 'M' || root_node->gtype == circuit::gateToInt("PI")
+            || root_node->gtype == circuit::gateToInt("DFF"))
+            continue;
+//        node* root_node = bench->nameToNode["G9"];
+        vector<vector<string>>rootNodeAllCutList = K_Feasible_Cut(root_node, 4);
+        if(rootNodeAllCutList.empty()) continue;
+        int idx = 0;
+        for(auto& current_cut_PIs : rootNodeAllCutList){
+            string name = root_node->node_name;
+            name.append("_cut_");
+            name.append(to_string(idx++));
+            circuit* cut = Construct_Cut_Circuit(bench, current_cut_PIs, root_node, name);
+            vector<string> LUT = cut->LUTtoQM();
+            cout << "Input_LUT: ";
+            for(const auto& i : LUT) cout << i << " ";    cout << endl;
+            cout <<  endl;
         }
+    }
+}
 
 
-//    }
-    bench->pc();
-    x = bench->errorRateCal();
-    cout << "EDP : "  << bench->max_lvl*x;
+void Test_CutLUT_To_Circuit(circuit* bench){
+    for(auto n : bench->Node_list){
+        if(n->node_name[0] == 'M' || n->gtype == circuit::gateToInt("PI")) continue;
+        node* cur = n;
+//        node* cur = bench->Poutput[0];
+        cout << "Current node: "<< cur->node_name << endl;
+        int idx = 0;
+        vector<vector<string>>cutList = K_Feasible_Cut(cur, 4);
+        float minEDP = INT_MAX;
+        for(auto & cutItem : cutList){
+            float curMinCut_EDP;
+            string name = cur->node_name;
+            name.append("_cut_");
+            name.append(to_string(idx));
+            idx++;
+            vector<string> namelist;
+            namelist.reserve(cutItem.size());
+            for(auto piCut : cutItem) namelist.push_back(piCut);
+            cout << "\ncut name: " << name << "\ncutPI: ";
+            for(const auto& i : namelist) cout << i << " "; cout << endl;
+            circuit* cut = Construct_Cut_Circuit(bench, namelist, cur, name);
+            float cur_EDP = cut->errorRateCal()* (float)cut->Poutput[0]->level;
+            cout << "cut EDP: " << cur_EDP << endl;
+            vector<string> LUT = cut->LUTtoQM();
+            unordered_map<string, int> PI_PO_Level;
+            vector<string> cutPI;
+            for(auto pi : cut->Pinput){
+                PI_PO_Level[pi->node_name] = pi->level;
+                cutPI.push_back(pi->node_name);
+            }
+            PI_PO_Level[cur->node_name] = cut->nameToNode[cur->node_name]->level;
+            circuit* LUTToCut = Construct_LUT_Circuit(LUT, PI_PO_Level, cutPI, cur->node_name, name);
+            float LUTToCut_EDP = cut->errorRateCal()*(float)LUTToCut->Poutput[0]->level;;
+            cout << "LUTToCut_EDP: " << LUTToCut_EDP << endl;
+            if(LUTToCut_EDP<cur_EDP){
+                curMinCut_EDP = LUTToCut_EDP;
+                if(minEDP > curMinCut_EDP){
+                    cout << "assign LUTToCut & delete cut" << endl;
+                    minEDP = curMinCut_EDP;
+                }
+                delete cut;
+            } else {
+                curMinCut_EDP = cur_EDP;
+                if(minEDP > curMinCut_EDP){
+                    cout << "assign cut & delete LUTToCut" << endl;
+                    minEDP = curMinCut_EDP;
+                }
+                delete LUTToCut;
+            }
+        }
+    }
+}
 
 
 
+void mapping(circuit* bench){
+    for(auto n : bench->Node_list){
+        if(n->node_name[0] == 'M' || n->gtype == circuit::gateToInt("PI")) continue;
+        node* cur = n;
+//        node* cur = bench->Poutput[0];
+        cout << "Current node: "<< cur->node_name << endl;
+        int idx = 0;
+        vector<vector<string>>cutList = K_Feasible_Cut(cur, 4);
+        circuit *minEDP_cut = nullptr;
+        float minEDP = INT_MAX;
+        for(auto & cutItem : cutList){
+            circuit* curMinCut;
+            float curMinCut_EDP;
+            string name = cur->node_name;
+            name.append("_cut_");
+            name.append(to_string(idx));
+            idx++;
+            vector<string> namelist;
+            namelist.reserve(cutItem.size());
+            for(auto piCut : cutItem) namelist.push_back(piCut);
+            cout << "\ncut name: " << name << "\ncutPI: ";
+            for(const auto& i : namelist) cout << i << " "; cout << endl;
+            circuit* cut = Construct_Cut_Circuit(bench, namelist, cur, name);
+            float cur_EDP = cut->errorRateCal()* (float)cut->Poutput[0]->level;
+            cout << "cut EDP: " << cur_EDP << endl;
+            vector<string> LUT = cut->LUTtoQM();
+            unordered_map<string, int> PI_PO_Level;
+            vector<string> cutPI;
+            for(auto pi : cut->Pinput){
+                PI_PO_Level[pi->node_name] = pi->level;
+                cutPI.push_back(pi->node_name);
+            }
+            PI_PO_Level[cur->node_name] = cut->nameToNode[cur->node_name]->level;
+            circuit* LUTToCut = Construct_LUT_Circuit(LUT, PI_PO_Level, cutPI, cur->node_name, name);
+            float LUTToCut_EDP = cut->errorRateCal()*(float)LUTToCut->Poutput[0]->level;;
+            cout << "LUTToCut_EDP: " << LUTToCut_EDP << endl;
+            if(LUTToCut_EDP<cur_EDP){
+                curMinCut = LUTToCut;
+                curMinCut_EDP = LUTToCut_EDP;
+                if(minEDP > curMinCut_EDP){
+                    cout << "assign LUTToCut & delete cut" << endl;
+                    minEDP = curMinCut_EDP;
+                    minEDP_cut = curMinCut;
+                }
+                delete cut;
+            } else {
+                curMinCut = cut;
+                curMinCut_EDP = cur_EDP;
+                if(minEDP > curMinCut_EDP){
+                    cout << "assign cut & delete LUTToCut" << endl;
+                    minEDP = curMinCut_EDP;
+                    minEDP_cut = curMinCut;
+                }
+                delete LUTToCut;
+            }
+        }
+        bench->removeOldNode(minEDP_cut->Pinput, cur);
+        bench->fillCutToCircuit(minEDP_cut);
+    }
+}
 
 
-    //    for(auto i : cut->Node_list) cout << i->node_name << " ";
+
+//float cur_EDP = cut->errorRateCal()* (float)cut->Poutput[0]->level;
+//cout << name << " cut EDP: " << cur_EDP << endl;
+//    bench->pc();
+//    vector<node*> removePi;
+//    removePi.push_back(bench->nameToNode["s2"]);
+//    removePi.push_back(bench->nameToNode["10"]);
+//    bench->removeOldNode(removePi, bench->nameToNode["22"]);
+//    bench->pc();
+
+//    for(auto i : cut->Node_list) cout << i->node_name << " ";
 //    cout << endl;
 //    for(auto pi : cutList[idx]) cut->deleteOldCut(n, namelist);
 //    cout << "delete" << endl;
@@ -65,83 +186,7 @@ int main(int argc, char *argv[]) {
 //    cout << endl;
 //    K_feasible_Cut(bench->nameToNode["g4"],3);
 
-    //QM test
+//QM test
 //    vector<int> a = {0, 1, 2};
 //    vector<string> result = bench->LUTtoQM();
 //    vector<string>result = bench->QM(a, bench->Pinput);
-    return 0;
-}
-
-
-vector<vector<node*>> K_feasible_Cut(node* cur_node, int k){
-    vector<node*> cutPI;
-    vector<vector<node*>> cutPIList;
-    cutPI.push_back(cur_node);
-    int idx = 0;
-    while(cutPI.size()>=idx){
-        bool flag = false;
-        cur_node = cutPI[idx];
-//        cout << "idx: " << idx << " currentNode: " << cur_node->node_name << endl;
-        int size = cutPI.size()-1+cur_node->unodes.size();      // all PI size if add cur_node's upnode
-        bool jump_flag = false;                                 // if has same node remain this node
-        for(auto i : cur_node->unodes) for(auto j : cutPI) if(j->node_name == i->node_name)  jump_flag = true;
-        if(jump_flag && cur_node->unodes.size()==1){
-            cutPI.erase(remove(cutPI.begin(), cutPI.end(), cur_node),cutPI.end());
-            flag = true;
-        }
-        if(!jump_flag && cur_node->unodes.size()>0 && size<=k){
-            for(auto up_node : cur_node->unodes)    cutPI.push_back(up_node);
-            if (size >= 2)    flag = true;
-            cutPI.erase(remove(cutPI.begin(), cutPI.end(), cur_node),cutPI.end());
-        }else{
-            idx++;
-        }
-//        for(auto j : cutPI) cout << j->node_name << " ";
-//        cout << endl;
-        if(flag)    cutPIList.push_back(cutPI);                         // if cutPI > 2 add it into list
-    }
-//    for(const auto& i : cutPIList){
-//        cout << "cuts: ";
-//        for(auto j : i) cout << j->node_name << " ";
-//        cout << endl;
-//    }
-    return cutPIList;
-}
-
-
-circuit* cutCircuit(circuit* bench, vector<string>& cutPI, node* rootNode, string& name){
-//    int min_lvl = 0;
-//    for(const auto& pi : cutPI){
-//        min_lvl = (bench->nameToNode[pi]->level < min_lvl) ? bench->nameToNode[pi]->level : min_lvl;
-//    }
-
-    circuit* new_circuit = new circuit(name, false);
-    node* new_node = new node(rootNode->node_name, rootNode->gtype);
-    new_circuit->Node_list.push_back(new_node);
-    new_circuit->Poutput.push_back(new_node);
-    new_circuit->nameToNode[new_node->node_name] = new_node;
-
-    for(auto cur_node : rootNode->unodes){
-        node_constructor(new_circuit, cutPI, cur_node, new_node);
-    }
-    cout << "\nGenerate a cut circuit\n" << endl;
-    return new_circuit;
-}
-
-
-void node_constructor(circuit* new_circuit, vector<string>& cutPI, node* cur_node, node* new_node){
-    vector<string>::iterator pi_find = find( cutPI.begin( ), cutPI.end( ), cur_node->node_name);
-    node* new_up_node;
-    if ( pi_find == cutPI.end() )
-        new_up_node = new node(cur_node->node_name, cur_node->gtype);
-    else{
-        new_up_node = new node(cur_node->node_name, circuit::gateToInt("PI"));
-        new_circuit->Pinput.push_back(new_up_node);
-    }
-    new_circuit->Node_list.push_back(new_up_node);
-    new_circuit->nameToNode[new_up_node->node_name] = new_up_node;
-    new_circuit->connectNodes(new_node, new_up_node);
-
-    if(pi_find == cutPI.end())
-        for(auto up_cur_node : cur_node->unodes) node_constructor(new_circuit, cutPI, up_cur_node, new_up_node);
-}

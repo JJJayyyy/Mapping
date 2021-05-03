@@ -1,0 +1,123 @@
+*** AND 3 input gate ****
+*** Inputs nodes : 1 ,2 ,3 ***
+****Output node : 9 ******
+****Clock input : 10  ******
+
+L1  1   14   8.0pH
+L3  14   5   1.9pH
+L2  2   4   8.0pH
+L4  4   6   1.9pH
+L5  11  12  3pH
+L6  11  13  3pH
+L7  10  11  4.0pH
+L8  7   9   8.0pH
+
+L9  3  15  8.0pH
+L10 15  16  1.9pH
+L11 11  17  3pH
+
+B1  14   0   jjmitll100 area=1.5 
+RB1 14   0   6.46
+B2  4   0   jjmitll100 area=1.5
+RB2 4   0   6.46 
+B3  12  14   jjmitll100 area=0.69
+RB3 12  14   14.0 
+B4  13  4   jjmitll100 area=0.69
+RB4 13  4   14.0 
+B5  5   7   jjmitll100 area=0.65
+RB5 5   7   14.92 
+B6  6   7   jjmitll100 area=0.65
+RB6 6   7   14.92 
+
+B7  7   0   jjmitll100 area=1.08
+RB7 7   0   8.98 
+B8  11  0   jjmitll100 area=1.33
+RB8 11  0   7.29 
+B9  9   0   jjmitll100 area=1.50
+RB9 9   0   6.46
+
+B10  15   0   jjmitll100 area=1.5 
+RB10 15   0   6.46
+B11  17  15   jjmitll100 area=0.69
+RB11 17  15   14.0 
+B12  16   7   jjmitll100 area=0.65
+RB12 16   7   14.92 
+
+IB1 0 11 pwl(0 0 5p 115uA)
+IB2 0 7  pwl(0 0 5p 84uA)
+IB3 0 9  pwl(0 0 5p 100uA)
+
+*lower the IB2 to add another branch into the add gate*
+
+.model jjmitll100 jj(rtype=1, vg=2.8mV, cap=0.07pF, r0=160, rn=16, icrit=0.1mA)
+
+Vin_A  1  0  pwl (0 0 100p 0 102p 827.13u 105p 0 400p 0 402p 827.13u 405p 0 500p 0 502p 827.13u 505p 0 700p 0 702p 827.13u 705p 0)
+Vin_B  2  0  pwl (0 0 200p 0 202p 827.13u 205p 0 400p 0 402p 827.13u 405p 0 600p 0 602p 827.13u 605p 0 700p 0 702p 827.13u 705p 0)
+Vin_C  3  0  pwl (0 0 300p 0 302p 827.13u 305p 0 500p 0 502p 827.13u 505p 0 600p 0 602p 827.13u 605p 0 700p 0 702p 827.13u 705p 0)
+Vin_Clock 10 0  pwl (0 0 50p 0 52p 827.13u 55p 0 150p 0 152p 827.13u 155p 0 250p 0 252p 827.13u 255p 0 350p 0 352p 827.13u 355p 0 450p 0 452p 827.13u 455p 0 550p 0 552p 827.13u 555p 0 650p 0 652p 827.13u 655p 0 750p 0 752p 827.13u 755p 0)
+
+.tran 0.1p 800p
+
+
+.print nodev 1 0
+.print nodev 2 0
+.print nodev 3 0
+.print nodev 9 0
+.print nodev 10 0
+
+
+.print devi Vin_Clock
+.print devi Vin_A
+.print devi Vin_B
+.print devi Vin_C
+
+.print devi ib1
+.print devi b1 JJALL
+.print devi rb1
+.print devi b2 JJALL
+.print devi rb2
+.print devi b3 JJALL
+.print devi rb3
+.print devi b4 JJALL
+.print devi rb4
+.print devi b5 JJALL
+.print devi rb5
+.print devi b6 JJALL
+.print devi rb6
+.print devi b7 JJALL
+.print devi rb7
+.print devi b8 JJALL
+.print devi rb8
+.print devi b9 JJALL
+.print devi rb9
+.print devi b10 JJALL
+.print devi rb10
+.print devi b11 JJALL
+.print devi rb11
+.print devi b12 JJALL
+.print devi rb12
+
+.print devi l1
+.print devi l2
+.print devi l3
+.print devi l4
+.print devi l5
+.print devi l6
+.print devi l7
+.print devi l8
+.print devi l9
+.print devi l10
+.print devi l11
+
+.print phase b1
+.print phase b2
+.print phase b3
+.print phase b4
+.print phase b5
+.print phase b6
+.print phase b7
+.print phase b8
+.print phase b9
+.print phase b10
+.print phase b11
+.print phase b12

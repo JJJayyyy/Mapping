@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/zhangjunyao/Documents/GitHub/mapping/circuit.h
+node.h
+/Users/zhangjunyao/Documents/GitHub/mapping/node.h
+unordered_map
+-
+unordered_set
+-
+algorithm
+-
+iostream
+-
+sstream
+-
+fstream
+-
+queue
+-
+vector
+-
+string
+-
+climits
+-
+
+/Users/zhangjunyao/Documents/GitHub/mapping/circuit_sim.cpp
+circuit.h
+/Users/zhangjunyao/Documents/GitHub/mapping/circuit.h
+
+/Users/zhangjunyao/Documents/GitHub/mapping/node.h
+vector
+-
+iostream
+-
+string
+-
+unordered_map
+-
+

@@ -43,10 +43,10 @@ RM = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/zhangjunyao/Desktop/EE554/sfq_parser
+CMAKE_SOURCE_DIR = /Users/zhangjunyao/Documents/GitHub/mapping
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug
+CMAKE_BINARY_DIR = /Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/sfq_parser.dir/depend.make
@@ -59,68 +59,68 @@ include CMakeFiles/sfq_parser.dir/flags.make
 
 CMakeFiles/sfq_parser.dir/main.cpp.o: CMakeFiles/sfq_parser.dir/flags.make
 CMakeFiles/sfq_parser.dir/main.cpp.o: ../main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/sfq_parser.dir/main.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/sfq_parser.dir/main.cpp.o -c /Users/zhangjunyao/Desktop/EE554/sfq_parser/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/sfq_parser.dir/main.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/sfq_parser.dir/main.cpp.o -c /Users/zhangjunyao/Documents/GitHub/mapping/main.cpp
 
 CMakeFiles/sfq_parser.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/sfq_parser.dir/main.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/zhangjunyao/Desktop/EE554/sfq_parser/main.cpp > CMakeFiles/sfq_parser.dir/main.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/zhangjunyao/Documents/GitHub/mapping/main.cpp > CMakeFiles/sfq_parser.dir/main.cpp.i
 
 CMakeFiles/sfq_parser.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/sfq_parser.dir/main.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/zhangjunyao/Desktop/EE554/sfq_parser/main.cpp -o CMakeFiles/sfq_parser.dir/main.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/zhangjunyao/Documents/GitHub/mapping/main.cpp -o CMakeFiles/sfq_parser.dir/main.cpp.s
 
 CMakeFiles/sfq_parser.dir/circuit.cpp.o: CMakeFiles/sfq_parser.dir/flags.make
 CMakeFiles/sfq_parser.dir/circuit.cpp.o: ../circuit.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/sfq_parser.dir/circuit.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/sfq_parser.dir/circuit.cpp.o -c /Users/zhangjunyao/Desktop/EE554/sfq_parser/circuit.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/sfq_parser.dir/circuit.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/sfq_parser.dir/circuit.cpp.o -c /Users/zhangjunyao/Documents/GitHub/mapping/circuit.cpp
 
 CMakeFiles/sfq_parser.dir/circuit.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/sfq_parser.dir/circuit.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/zhangjunyao/Desktop/EE554/sfq_parser/circuit.cpp > CMakeFiles/sfq_parser.dir/circuit.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/zhangjunyao/Documents/GitHub/mapping/circuit.cpp > CMakeFiles/sfq_parser.dir/circuit.cpp.i
 
 CMakeFiles/sfq_parser.dir/circuit.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/sfq_parser.dir/circuit.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/zhangjunyao/Desktop/EE554/sfq_parser/circuit.cpp -o CMakeFiles/sfq_parser.dir/circuit.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/zhangjunyao/Documents/GitHub/mapping/circuit.cpp -o CMakeFiles/sfq_parser.dir/circuit.cpp.s
 
 CMakeFiles/sfq_parser.dir/node.cpp.o: CMakeFiles/sfq_parser.dir/flags.make
 CMakeFiles/sfq_parser.dir/node.cpp.o: ../node.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/sfq_parser.dir/node.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/sfq_parser.dir/node.cpp.o -c /Users/zhangjunyao/Desktop/EE554/sfq_parser/node.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/sfq_parser.dir/node.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/sfq_parser.dir/node.cpp.o -c /Users/zhangjunyao/Documents/GitHub/mapping/node.cpp
 
 CMakeFiles/sfq_parser.dir/node.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/sfq_parser.dir/node.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/zhangjunyao/Desktop/EE554/sfq_parser/node.cpp > CMakeFiles/sfq_parser.dir/node.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/zhangjunyao/Documents/GitHub/mapping/node.cpp > CMakeFiles/sfq_parser.dir/node.cpp.i
 
 CMakeFiles/sfq_parser.dir/node.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/sfq_parser.dir/node.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/zhangjunyao/Desktop/EE554/sfq_parser/node.cpp -o CMakeFiles/sfq_parser.dir/node.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/zhangjunyao/Documents/GitHub/mapping/node.cpp -o CMakeFiles/sfq_parser.dir/node.cpp.s
 
 CMakeFiles/sfq_parser.dir/circuit_Quine_McCluskey.cpp.o: CMakeFiles/sfq_parser.dir/flags.make
 CMakeFiles/sfq_parser.dir/circuit_Quine_McCluskey.cpp.o: ../circuit_Quine_McCluskey.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/sfq_parser.dir/circuit_Quine_McCluskey.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/sfq_parser.dir/circuit_Quine_McCluskey.cpp.o -c /Users/zhangjunyao/Desktop/EE554/sfq_parser/circuit_Quine_McCluskey.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/sfq_parser.dir/circuit_Quine_McCluskey.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/sfq_parser.dir/circuit_Quine_McCluskey.cpp.o -c /Users/zhangjunyao/Documents/GitHub/mapping/circuit_Quine_McCluskey.cpp
 
 CMakeFiles/sfq_parser.dir/circuit_Quine_McCluskey.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/sfq_parser.dir/circuit_Quine_McCluskey.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/zhangjunyao/Desktop/EE554/sfq_parser/circuit_Quine_McCluskey.cpp > CMakeFiles/sfq_parser.dir/circuit_Quine_McCluskey.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/zhangjunyao/Documents/GitHub/mapping/circuit_Quine_McCluskey.cpp > CMakeFiles/sfq_parser.dir/circuit_Quine_McCluskey.cpp.i
 
 CMakeFiles/sfq_parser.dir/circuit_Quine_McCluskey.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/sfq_parser.dir/circuit_Quine_McCluskey.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/zhangjunyao/Desktop/EE554/sfq_parser/circuit_Quine_McCluskey.cpp -o CMakeFiles/sfq_parser.dir/circuit_Quine_McCluskey.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/zhangjunyao/Documents/GitHub/mapping/circuit_Quine_McCluskey.cpp -o CMakeFiles/sfq_parser.dir/circuit_Quine_McCluskey.cpp.s
 
 CMakeFiles/sfq_parser.dir/circuit_sim.cpp.o: CMakeFiles/sfq_parser.dir/flags.make
 CMakeFiles/sfq_parser.dir/circuit_sim.cpp.o: ../circuit_sim.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/sfq_parser.dir/circuit_sim.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/sfq_parser.dir/circuit_sim.cpp.o -c /Users/zhangjunyao/Desktop/EE554/sfq_parser/circuit_sim.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/sfq_parser.dir/circuit_sim.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/sfq_parser.dir/circuit_sim.cpp.o -c /Users/zhangjunyao/Documents/GitHub/mapping/circuit_sim.cpp
 
 CMakeFiles/sfq_parser.dir/circuit_sim.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/sfq_parser.dir/circuit_sim.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/zhangjunyao/Desktop/EE554/sfq_parser/circuit_sim.cpp > CMakeFiles/sfq_parser.dir/circuit_sim.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/zhangjunyao/Documents/GitHub/mapping/circuit_sim.cpp > CMakeFiles/sfq_parser.dir/circuit_sim.cpp.i
 
 CMakeFiles/sfq_parser.dir/circuit_sim.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/sfq_parser.dir/circuit_sim.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/zhangjunyao/Desktop/EE554/sfq_parser/circuit_sim.cpp -o CMakeFiles/sfq_parser.dir/circuit_sim.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/zhangjunyao/Documents/GitHub/mapping/circuit_sim.cpp -o CMakeFiles/sfq_parser.dir/circuit_sim.cpp.s
 
 # Object files for target sfq_parser
 sfq_parser_OBJECTS = \
@@ -140,7 +140,7 @@ sfq_parser: CMakeFiles/sfq_parser.dir/circuit_Quine_McCluskey.cpp.o
 sfq_parser: CMakeFiles/sfq_parser.dir/circuit_sim.cpp.o
 sfq_parser: CMakeFiles/sfq_parser.dir/build.make
 sfq_parser: CMakeFiles/sfq_parser.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable sfq_parser"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable sfq_parser"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/sfq_parser.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -153,6 +153,6 @@ CMakeFiles/sfq_parser.dir/clean:
 .PHONY : CMakeFiles/sfq_parser.dir/clean
 
 CMakeFiles/sfq_parser.dir/depend:
-	cd /Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/zhangjunyao/Desktop/EE554/sfq_parser /Users/zhangjunyao/Desktop/EE554/sfq_parser /Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug /Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug /Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug/CMakeFiles/sfq_parser.dir/DependInfo.cmake --color=$(COLOR)
+	cd /Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/zhangjunyao/Documents/GitHub/mapping /Users/zhangjunyao/Documents/GitHub/mapping /Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug /Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug /Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug/CMakeFiles/sfq_parser.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/sfq_parser.dir/depend
 

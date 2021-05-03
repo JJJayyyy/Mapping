@@ -11,11 +11,8 @@
 #include <unordered_map>
 using namespace std;
 
-enum class e_gtype {IPT, BRCH, XOR, OR, NOR, NOT, NAND, AND, XNOR, DFF};
-
-
 //case 0: return("PI");
-//case 1: return("SPLIT");
+//case 1: return("SP");
 //case 2: return("XOR");
 //case 3: return("XNOR");
 //case 4: return("OR");
@@ -31,15 +28,16 @@ class node {
 public:
 
     string node_name;
-    int gtype, level;
+    int gtype;
+    int level = 0;
     vector <node*> unodes, dnodes;
     int val_sim;
+    bool initial_node = false;                   // initial node gtype: PI and DFF
 
     node(string &name, int gate_type);
     node(string &name);
+    ~node();
     float error_rate;
-
-
 };
 
 

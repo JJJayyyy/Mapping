@@ -4,11 +4,11 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/Users/zhangjunyao/Desktop/EE554/sfq_parser/circuit.cpp" "/Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug/CMakeFiles/sfq_parser.dir/circuit.cpp.o"
-  "/Users/zhangjunyao/Desktop/EE554/sfq_parser/circuit_Quine_McCluskey.cpp" "/Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug/CMakeFiles/sfq_parser.dir/circuit_Quine_McCluskey.cpp.o"
-  "/Users/zhangjunyao/Desktop/EE554/sfq_parser/circuit_sim.cpp" "/Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug/CMakeFiles/sfq_parser.dir/circuit_sim.cpp.o"
-  "/Users/zhangjunyao/Desktop/EE554/sfq_parser/main.cpp" "/Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug/CMakeFiles/sfq_parser.dir/main.cpp.o"
-  "/Users/zhangjunyao/Desktop/EE554/sfq_parser/node.cpp" "/Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug/CMakeFiles/sfq_parser.dir/node.cpp.o"
+  "/Users/zhangjunyao/Documents/GitHub/mapping/circuit.cpp" "/Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug/CMakeFiles/sfq_parser.dir/circuit.cpp.o"
+  "/Users/zhangjunyao/Documents/GitHub/mapping/circuit_Quine_McCluskey.cpp" "/Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug/CMakeFiles/sfq_parser.dir/circuit_Quine_McCluskey.cpp.o"
+  "/Users/zhangjunyao/Documents/GitHub/mapping/circuit_sim.cpp" "/Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug/CMakeFiles/sfq_parser.dir/circuit_sim.cpp.o"
+  "/Users/zhangjunyao/Documents/GitHub/mapping/main.cpp" "/Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug/CMakeFiles/sfq_parser.dir/main.cpp.o"
+  "/Users/zhangjunyao/Documents/GitHub/mapping/node.cpp" "/Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug/CMakeFiles/sfq_parser.dir/node.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "AppleClang")
 

@@ -48,10 +48,10 @@ RM = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/zhangjunyao/Desktop/EE554/sfq_parser
+CMAKE_SOURCE_DIR = /Users/zhangjunyao/Documents/GitHub/mapping
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug
+CMAKE_BINARY_DIR = /Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug/CMakeFiles /Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug/CMakeFiles /Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named sfq_parser
+# Target rules for targets named mapping
 
 # Build rule for target.
-sfq_parser: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 sfq_parser
-.PHONY : sfq_parser
+mapping: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 mapping
+.PHONY : mapping
 
 # fast build rule for target.
-sfq_parser/fast:
-	$(MAKE) -f CMakeFiles/sfq_parser.dir/build.make CMakeFiles/sfq_parser.dir/build
-.PHONY : sfq_parser/fast
+mapping/fast:
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/build
+.PHONY : mapping/fast
 
 circuit.o: circuit.cpp.o
 
@@ -129,7 +129,7 @@ circuit.o: circuit.cpp.o
 
 # target to build an object file
 circuit.cpp.o:
-	$(MAKE) -f CMakeFiles/sfq_parser.dir/build.make CMakeFiles/sfq_parser.dir/circuit.cpp.o
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/circuit.cpp.o
 .PHONY : circuit.cpp.o
 
 circuit.i: circuit.cpp.i
@@ -138,7 +138,7 @@ circuit.i: circuit.cpp.i
 
 # target to preprocess a source file
 circuit.cpp.i:
-	$(MAKE) -f CMakeFiles/sfq_parser.dir/build.make CMakeFiles/sfq_parser.dir/circuit.cpp.i
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/circuit.cpp.i
 .PHONY : circuit.cpp.i
 
 circuit.s: circuit.cpp.s
@@ -147,7 +147,7 @@ circuit.s: circuit.cpp.s
 
 # target to generate assembly for a file
 circuit.cpp.s:
-	$(MAKE) -f CMakeFiles/sfq_parser.dir/build.make CMakeFiles/sfq_parser.dir/circuit.cpp.s
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/circuit.cpp.s
 .PHONY : circuit.cpp.s
 
 circuit_Quine_McCluskey.o: circuit_Quine_McCluskey.cpp.o
@@ -156,7 +156,7 @@ circuit_Quine_McCluskey.o: circuit_Quine_McCluskey.cpp.o
 
 # target to build an object file
 circuit_Quine_McCluskey.cpp.o:
-	$(MAKE) -f CMakeFiles/sfq_parser.dir/build.make CMakeFiles/sfq_parser.dir/circuit_Quine_McCluskey.cpp.o
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/circuit_Quine_McCluskey.cpp.o
 .PHONY : circuit_Quine_McCluskey.cpp.o
 
 circuit_Quine_McCluskey.i: circuit_Quine_McCluskey.cpp.i
@@ -165,7 +165,7 @@ circuit_Quine_McCluskey.i: circuit_Quine_McCluskey.cpp.i
 
 # target to preprocess a source file
 circuit_Quine_McCluskey.cpp.i:
-	$(MAKE) -f CMakeFiles/sfq_parser.dir/build.make CMakeFiles/sfq_parser.dir/circuit_Quine_McCluskey.cpp.i
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/circuit_Quine_McCluskey.cpp.i
 .PHONY : circuit_Quine_McCluskey.cpp.i
 
 circuit_Quine_McCluskey.s: circuit_Quine_McCluskey.cpp.s
@@ -174,8 +174,35 @@ circuit_Quine_McCluskey.s: circuit_Quine_McCluskey.cpp.s
 
 # target to generate assembly for a file
 circuit_Quine_McCluskey.cpp.s:
-	$(MAKE) -f CMakeFiles/sfq_parser.dir/build.make CMakeFiles/sfq_parser.dir/circuit_Quine_McCluskey.cpp.s
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/circuit_Quine_McCluskey.cpp.s
 .PHONY : circuit_Quine_McCluskey.cpp.s
+
+circuit_replace.o: circuit_replace.cpp.o
+
+.PHONY : circuit_replace.o
+
+# target to build an object file
+circuit_replace.cpp.o:
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/circuit_replace.cpp.o
+.PHONY : circuit_replace.cpp.o
+
+circuit_replace.i: circuit_replace.cpp.i
+
+.PHONY : circuit_replace.i
+
+# target to preprocess a source file
+circuit_replace.cpp.i:
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/circuit_replace.cpp.i
+.PHONY : circuit_replace.cpp.i
+
+circuit_replace.s: circuit_replace.cpp.s
+
+.PHONY : circuit_replace.s
+
+# target to generate assembly for a file
+circuit_replace.cpp.s:
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/circuit_replace.cpp.s
+.PHONY : circuit_replace.cpp.s
 
 circuit_sim.o: circuit_sim.cpp.o
 
@@ -183,7 +210,7 @@ circuit_sim.o: circuit_sim.cpp.o
 
 # target to build an object file
 circuit_sim.cpp.o:
-	$(MAKE) -f CMakeFiles/sfq_parser.dir/build.make CMakeFiles/sfq_parser.dir/circuit_sim.cpp.o
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/circuit_sim.cpp.o
 .PHONY : circuit_sim.cpp.o
 
 circuit_sim.i: circuit_sim.cpp.i
@@ -192,7 +219,7 @@ circuit_sim.i: circuit_sim.cpp.i
 
 # target to preprocess a source file
 circuit_sim.cpp.i:
-	$(MAKE) -f CMakeFiles/sfq_parser.dir/build.make CMakeFiles/sfq_parser.dir/circuit_sim.cpp.i
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/circuit_sim.cpp.i
 .PHONY : circuit_sim.cpp.i
 
 circuit_sim.s: circuit_sim.cpp.s
@@ -201,8 +228,35 @@ circuit_sim.s: circuit_sim.cpp.s
 
 # target to generate assembly for a file
 circuit_sim.cpp.s:
-	$(MAKE) -f CMakeFiles/sfq_parser.dir/build.make CMakeFiles/sfq_parser.dir/circuit_sim.cpp.s
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/circuit_sim.cpp.s
 .PHONY : circuit_sim.cpp.s
+
+circuit_util.o: circuit_util.cpp.o
+
+.PHONY : circuit_util.o
+
+# target to build an object file
+circuit_util.cpp.o:
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/circuit_util.cpp.o
+.PHONY : circuit_util.cpp.o
+
+circuit_util.i: circuit_util.cpp.i
+
+.PHONY : circuit_util.i
+
+# target to preprocess a source file
+circuit_util.cpp.i:
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/circuit_util.cpp.i
+.PHONY : circuit_util.cpp.i
+
+circuit_util.s: circuit_util.cpp.s
+
+.PHONY : circuit_util.s
+
+# target to generate assembly for a file
+circuit_util.cpp.s:
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/circuit_util.cpp.s
+.PHONY : circuit_util.cpp.s
 
 main.o: main.cpp.o
 
@@ -210,7 +264,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) -f CMakeFiles/sfq_parser.dir/build.make CMakeFiles/sfq_parser.dir/main.cpp.o
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -219,7 +273,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) -f CMakeFiles/sfq_parser.dir/build.make CMakeFiles/sfq_parser.dir/main.cpp.i
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -228,7 +282,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) -f CMakeFiles/sfq_parser.dir/build.make CMakeFiles/sfq_parser.dir/main.cpp.s
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 node.o: node.cpp.o
@@ -237,7 +291,7 @@ node.o: node.cpp.o
 
 # target to build an object file
 node.cpp.o:
-	$(MAKE) -f CMakeFiles/sfq_parser.dir/build.make CMakeFiles/sfq_parser.dir/node.cpp.o
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/node.cpp.o
 .PHONY : node.cpp.o
 
 node.i: node.cpp.i
@@ -246,7 +300,7 @@ node.i: node.cpp.i
 
 # target to preprocess a source file
 node.cpp.i:
-	$(MAKE) -f CMakeFiles/sfq_parser.dir/build.make CMakeFiles/sfq_parser.dir/node.cpp.i
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/node.cpp.i
 .PHONY : node.cpp.i
 
 node.s: node.cpp.s
@@ -255,7 +309,7 @@ node.s: node.cpp.s
 
 # target to generate assembly for a file
 node.cpp.s:
-	$(MAKE) -f CMakeFiles/sfq_parser.dir/build.make CMakeFiles/sfq_parser.dir/node.cpp.s
+	$(MAKE) -f CMakeFiles/mapping.dir/build.make CMakeFiles/mapping.dir/node.cpp.s
 .PHONY : node.cpp.s
 
 # Help Target
@@ -266,16 +320,22 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... sfq_parser"
+	@echo "... mapping"
 	@echo "... circuit.o"
 	@echo "... circuit.i"
 	@echo "... circuit.s"
 	@echo "... circuit_Quine_McCluskey.o"
 	@echo "... circuit_Quine_McCluskey.i"
 	@echo "... circuit_Quine_McCluskey.s"
+	@echo "... circuit_replace.o"
+	@echo "... circuit_replace.i"
+	@echo "... circuit_replace.s"
 	@echo "... circuit_sim.o"
 	@echo "... circuit_sim.i"
 	@echo "... circuit_sim.s"
+	@echo "... circuit_util.o"
+	@echo "... circuit_util.i"
+	@echo "... circuit_util.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

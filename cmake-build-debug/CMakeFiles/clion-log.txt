@@ -1,4 +1,4 @@
-/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /Users/zhangjunyao/Desktop/EE554/sfq_parser
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /Users/zhangjunyao/Documents/GitHub/mapping
 -- Configuring done
 -- Generating done
--- Build files have been written to: /Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug
+-- Build files have been written to: /Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug

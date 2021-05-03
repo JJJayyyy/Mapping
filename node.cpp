@@ -15,3 +15,8 @@ node::node(string &name) {
 
 }
 
+node::~node() {
+    unodes.clear();
+    dnodes.clear();
+}
+

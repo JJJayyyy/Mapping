@@ -1,0 +1,276 @@
+****** FULL ADDER ******
+****Input node : 1,2,3 *****
+******Output node : 13,17 ******
+**** Clock input : 16 *****
+
+*****************************************
+***************** inverter *************
+.SUBCKT invip 11 12 8 
+L11  11  1  8pH
+L12  12  2  8pH
+L1   1   3  4pH
+L2   2   6  4pH
+L3   5   6  8pH
+L4   7   8  8pH
+
+B11  1    0     jjmitll100 area=1.3
+RB11 1    0     7.46
+B12  2    0     jjmitll100 area=1.3
+RB12 2    0     7.46
+B1   3    5     jjmitll100 area=1.5
+RB1  3    5     6.46  
+B3   5    7     jjmitll100 area=2.5
+RB3  5    7     3.88 
+B4   6    7     jjmitll100 area=2.5
+RB4  6    7     3.88
+B5   7    0     jjmitll100 area=2.5
+RB5  7    0     3.88
+B6   8    0     jjmitll100 area=1.3
+RB6  8    0     7.46
+
+
+* Bias source 2.5mV and 7.41 Ohm
+ib1  0    5        pwl (0 0 5p 250uA 100n 250uA)
+ib2  0    8        pwl (0 0 5p 100uA 100n 100uA)
+ib4  0    2        pwl (0 0 5p 100uA 100n 100uA)  
+
+.model jjmitll100 jj(rtype=1, vg=2.8mV, cap=0.07pF, r0=160, rn=16, icrit=0.1mA)
+.ends invip
+*****************************************
+***************** XOR gate *************
+.SUBCKT XOR2ip 1 2 10 11 
+L1      5     7     7.3pH
+L2      6     7     7.3pH
+L3      2     3     8pH
+L4      1     4     8pH
+L5      8     11    8pH
+L6      9     10    8pH
+
+B1      3     0     jjmitll100 area=1.43
+RB1     3     0     6.78
+B2      4     0     jjmitll100 area=1.43
+RB2     4     0     6.78
+B3      3     5     jjmitll100 area=1.08
+RB3     3     5     8.98
+B4      4     6     jjmitll100 area=1.08
+RB4     4     6     8.98
+B5      7     8     jjmitll100 area=1.35
+RB5     7     8     7.185
+B6      9     8     jjmitll100 area=1.01
+RB6     9     8     9.604
+B7      8     0     jjmitll100 area=1.22
+RB7     8     0     7.95
+B8      11    0     jjmitll100 area=2.00
+RB8     11    0     4.85
+
+* Bias source 2.5mV and 7.41 Ohm
+IB1 0 5  pwl(0 0 5p 80uA)
+IB2 0 6  pwl(0 0 5p 80uA)
+IB3 0 11 pwl(0 0 5p 130uA)
+
+.model jjmitll100 jj(rtype=1, vg=2.8mV, cap=0.07pF, r0=160, rn=16, icrit=0.1mA)
+.ends XOR2ip
+*****************************************
+***************** Flip flop *************
+.SUBCKT FFip 7 12 15
+L5   8   7    6pH
+L6   9   10   13.9pH
+L7   12  13   4pH
+L8   10  11   8pH
+L9   11  14   4pH
+L10  14  15   4pH
+
+B5   8   9   jjmitll100 area=0.7
+RB5  8   9   13.8 
+B6   9   0   jjmitll100 area=1.15
+RB6  9   0   8.43 
+B7   10  0   jjmitll100 area=1.11
+RB7  10  0   8.73
+B8   13  10  jjmitll100 area=0.8
+RB8  13  10  12.125
+B9   11  0   jjmitll100 area=1.30
+RB9  11  0   7.46
+B10  14  0   jjmitll100 area=1.30
+RB10 14  0   7.46
+B11  15  0   jjmitll100 area=1.30
+RB11 15  0   7.46
+B23  7   0   jjmitll100 area=1.5
+RB23 7   0   6.46
+
+* Bias source 2.5mV and 7.41 Ohm
+IB2 0 9  pwl(0 0 5p 105uA)
+IB3 0 11 pwl(0 0 5p 100uA)
+IB4 0 14 pwl(0 0 5p 100uA)
+
+.model jjmitll100 jj(rtype=1, vg=2.8mV, cap=0.07pF, r0=160, rn=16, icrit=0.1mA)
+.ends FFip
+****************************************
+***************** OR2 gate *************
+.SUBCKT OR2ip 1 2 12 11
+L1   5  7   0.9pH
+L2   6  7   0.9pH
+L3   1  3   4pH
+L4   2  4   4pH
+L5   7  8   9.3pH
+L6   9  10  13.9pH
+L7   12 13  4pH
+L8   10 11  8pH
+
+B1   3   0   jjmitll100 area=1.57 
+RB1  3   0   6.17
+B2   4   0   jjmitll100 area=1.57
+RB2  4   0   6.17 
+B3   3   5   jjmitll100 area=1.08
+RB3  3   5   8.98 
+B4   4   6   jjmitll100 area=1.08
+RB4  4   6   8.98 
+B5   8   9   jjmitll100 area=0.9
+RB5  8   9   10.7 
+B6   9   0   jjmitll100 area=1.15
+RB6  9   0   8.43 
+B7   10  0   jjmitll100 area=1.11
+RB7  10  0   8.73
+B8   13  10  jjmitll100 area=0.8
+RB8  13  10  12.125 
+B9   11  0   jjmitll100 area=1.30
+RB9  11  0   7.46
+
+* Bias source 2.5mV and 7.41 Ohm
+* node 7 is the split point, so it has the large current
+IB1 0 7  pwl(0 0 5p 168uA)
+IB2 0 9  pwl(0 0 5p 105uA)
+IB3 0 11 pwl(0 0 5p 100uA)
+
+.model jjmitll100 jj(rtype=1, vg=2.8mV, cap=0.07pF, r0=160, rn=16, icrit=0.1mA)
+.ends OR2ip
+*****************************************
+***************** AND2 gate *************
+.SUBCKT AND2ip 1 2 10 9
+L1  3   5   1.9pH
+L2  4   6   1.9pH
+L3  1   3   8.0pH
+L4  2   4   8.0pH
+L5  11  12  3pH
+L6  11  13  3pH
+L7  10  11  4.0pH
+L8  7   9   8.0pH
+
+B1  3   0   jjmitll100 area=1.5 
+RB1 3   0   6.46
+B2  4   0   jjmitll100 area=1.5
+RB2 4   0   6.46 
+B3  12  3   jjmitll100 area=0.69
+RB3 12  3   14.0 
+B4  13  4   jjmitll100 area=0.69
+RB4 13  4   14.0 
+B5  5   7   jjmitll100 area=0.65
+RB5 5   7   14.92 
+B6  6   7   jjmitll100 area=0.65
+RB6 6   7   14.92 
+B7  7   0   jjmitll100 area=1.08
+RB7 7   0   8.98 
+B8  11  0   jjmitll100 area=1.33
+RB8 11  0   7.29 
+B9  9   0   jjmitll100 area=1.50
+RB9 9   0   6.46
+
+IB1 0 11 pwl(0 0 5p 115uA)
+IB2 0 7  pwl(0 0 5p 84uA)
+IB3 0 9  pwl(0 0 5p 100uA)
+
+.model jjmitll100 jj(rtype=1, vg=2.8mV, cap=0.07pF, r0=160, rn=16, icrit=0.1mA)
+.ends AND2ip
+*****************************************
+.SUBCKT JTL 1 3
+
+L1   1  2  6pH
+L2   2  3  6pH
+
+B1   2  0  jjmitll100 area=1.30
+RB1  2  0  7.46
+B2   3  0  jjmitll100 area=1.30
+RB2  3  0  7.46
+
+* Bias source 2.5mV and 7.41 Ohm
+IB1  0  2  pwl(0 0 5p 100uA)
+IB2  0  3  pwl(0 0 5p 100uA)
+
+.model jjmitll100 jj(rtype=1, vg=2.8mV, cap=0.07pF, r0=160, rn=16, icrit=0.1mA)
+.ends JTL
+*****************************************
+*****************************************
+*****************************************
+***************** Full Adder gate netlist ****************
+X1 XOR2ip 1 2 99 4
+X2 JTL 4 5
+X3 FFip 5 99 23
+X4 JTL 23 24
+X5 XOR2ip 3 81 99 6
+X6 invip 10 99 21
+X7 XOR2ip 2 82 99 8
+X8 XOR2ip 1 83 99 9
+X9 XOR2ip 22 24 99 7
+X10 JTL 8 25
+X11 JTL 9 26
+X12 invip 25 99 27
+X13 FFip 26 99 28
+X14 JTL 27 29
+X15 JTL 28 30
+X16 AND2ip 22 24 99 11
+X17 AND2ip 29 30 99 12 
+X18 FFip 19 99 13
+X19 JTL 11 14
+X20 JTL 12 15
+X21 OR2ip 14 15 99 16
+X22 JTL 6 10
+X23 JTL 21 22
+X24 JTL 7 19
+
+X25 XOR2ip 2 71 99 31
+X26 XOR2ip 3 72 99 32
+X27 JTL 31 33
+X28 JTL 32 34
+X29 OR2ip 33 34 99 35
+X30 JTL 35 36
+X31 FFip 36 99 37
+X32 JTL 37 38
+X33 invip 38 99 39
+X34 JTL 39 40
+X35 JTL 13 41
+X36 XOR2ip 40 41 99 61
+X37 JTL 16 42
+X38 FFip 42 99 62
+*****************************************
+VinA 1  0  pwl (0 0 60p 0 62p 827.13u 65p 0 260p 0 262p 827.13u 265p 0 460p 0 462p 827.13u 465p 0 660p 0 662p 827.13u 665p 0)
+VinB 2  0  pwl (0 0 60p 0 62p 827.13u 65p 0 160p 0 162p 827.13u 165p 0 460p 0 462p 827.13u 465p 0 560p 0 562p 827.13u 565p 0)
+VinC 3  0  pwl (0 0 60p 0 62p 827.13u 65p 0 160p 0 162p 827.13u 165p 0 260p 0 262p 827.13u 265p 0 360p 0 362p 827.13u 365p 0)
+
+VinG 71 0  pwl (0 0 50p 0 52p 827.13u 55p 0 150p 0 152p 827.13u 155p 0 250p 0 252p 827.13u 255p 0 350p 0 352p 827.13u 355p 0 450p 0 452p 827.13u 455p 0 550p 0 552p 827.13u 555p 0 650p 0 652p 827.13u 655p 0)
+VinH 72 0  pwl (0 0)
+
+VinD 81 0  pwl (0 0 60p 0 62p 827.13u 65p 0 160p 0 162p 827.13u 165p 0 260p 0 262p 827.13u 265p 0 360p 0 362p 827.13u 365p 0 460p 0 462p 827.13u 465p 0 560p 0 562p 827.13u 565p 0 660p 0 662p 827.13u 665p 0 760p 0 762p 827.13u 765p 0)
+VinE 82 0  pwl (0 0 60p 0 62p 827.13u 65p 0 160p 0 162p 827.13u 165p 0 260p 0 262p 827.13u 265p 0 360p 0 362p 827.13u 365p 0 460p 0 462p 827.13u 465p 0 560p 0 562p 827.13u 565p 0 660p 0 662p 827.13u 665p 0 760p 0 762p 827.13u 765p 0)
+VinF 83 0  pwl (0 0)
+
+VinCLK 99  0  pwl (0 0 50p 0 52p 827.13u 55p 0 150p 0 152p 827.13u 155p 0 250p 0 252p 827.13u 255p 0 350p 0 352p 827.13u 355p 0 450p 0 452p 827.13u 455p 0 550p 0 552p 827.13u 555p 0 650p 0 652p 827.13u 655p 0 750p 0 752p 827.13u 755p 0 850p 0 852p 827.13u 855p 0 950p 0 952p 827.13u 955p 0 1050p 0 1052p 827.13u 1055p 0 1150p 0 1152p 827.13u 1155p 0 1250p 0 1252p 827.13u 1255p 0)
+
+.tran 0.1p 1300p
+
+.print nodev 1 0
+.print nodev 2 0
+.print nodev 3 0
+.print nodev 13 0
+.print nodev 16 0
+
+.print nodev 61 0
+.print nodev 62 0
+
+.print nodev 71 0
+.print nodev 72 0
+.print nodev 81 0
+.print nodev 82 0
+.print nodev 83 0
+
+.print nodev 99 0
+
+

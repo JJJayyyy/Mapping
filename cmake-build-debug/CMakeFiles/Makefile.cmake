@@ -52,5 +52,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/sfq_parser.dir/DependInfo.cmake"
+  "CMakeFiles/mapping.dir/DependInfo.cmake"
   )

@@ -9,13 +9,14 @@ void simulation(node* cur_node);
 ***********************************************************************/
 vector<string>circuit::LUTtoQM(){
     vector<vector<int>>LUT = LUT_generation();
+    cout << "LUT generation is done" << endl;
     vector<int>LUT_output_1;
-    for(int i=0; i<LUT.size(); i++){
+    for(int i=0; i<LUT.size(); i++){        // k inputs, 1 outputs
         if(LUT[i][0]==1)   LUT_output_1.push_back(i);
     }
-    for(auto i : LUT_output_1) cout << i << " ";
-    cout << endl;
-     return circuit::QM(LUT_output_1, Pinput);
+//    for(auto i : LUT_output_1) cout << i << " ";
+//    cout << endl;
+    return circuit::QM(LUT_output_1, Pinput);
 }
 
 
@@ -23,14 +24,18 @@ vector<string>circuit::LUTtoQM(){
     Generate the LUT
 ***********************************************************************/
 vector<vector<int>>circuit::LUT_generation() {
-    if(level_flag!=1) levelization();
+
     vector<vector<int>> PO_results;
+    if(level_flag != 1) {
+        cout << "circuit needs to be leveled first before inserting the splitter binary trees" << endl;
+        return PO_results;
+    }
     int LUT_row_size = pow(2,Pinput.size());
     for(int row = 0; row <LUT_row_size; row++){
         vector<int> cur_row_PO_results;
         int ini_value = row;
-        for(auto node : Node_list)  node->val_sim = -1;
-        for(auto & pi : Pinput){            // set the Pis according to the LUT row
+        for(auto& node : Node_list)  node->val_sim = -1;
+        for(auto& pi : Pinput){            // set the Pis according to the LUT row
             if(ini_value > 1){
                 pi->val_sim = ini_value % 2;
                 ini_value = ini_value/2;
@@ -47,9 +52,8 @@ vector<vector<int>>circuit::LUT_generation() {
             }
         }
         PO_results.push_back(cur_row_PO_results);
-        cout << row << ": ";
-        for(auto x : cur_row_PO_results) cout << x << " ";
-        cout << endl;
+//        cout << row << ": ";
+//        for(auto x : cur_row_PO_results) cout << x << " ";    cout << endl;
     }
     return PO_results;
 }
@@ -143,10 +147,15 @@ void simulation(node* cur_node){
 float circuit::errorRateCal(){
     float result = 1;
     for(auto cur_node : Node_list){
-        if(cur_node->gtype>1) {
+        if(cur_node->gtype > 0) {
             result = result*(1-errorRateMap[intToGate(cur_node->gtype)]);
+            /** ER calculation check
+            cout << "current gate: " << intToGate(cur_node->gtype) \
+            << "\tER: " << errorRateMap[intToGate(cur_node->gtype)] << endl;
+            cout <<  "Correct rate: " << result << endl;
+             **/
         }
     }
-    cout << "Total error rate of the circuit is: " << result << endl;
-    return result;
+//    cout << "Total error rate of the circuit is: " << 1-result << endl;
+    return 1-result;
 }

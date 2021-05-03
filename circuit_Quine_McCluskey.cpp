@@ -57,6 +57,18 @@ bool isGreyCode(string a,string b){
     return (flag==1);
 }
 
+/**Function*************************************************************
+   function to check if two bits are XOR gate
+***********************************************************************/
+
+bool isXOR(string a, string b){
+    int flag=0;
+    for(int i=0;i<a.length();i++){
+        if((a[i]=='0' && b[i]=='1')||(a[i]=='1' && b[i]=='0'))
+            flag++;
+    }
+    return (flag==2);
+}
 
 /**Function*************************************************************
     replace complement terms with don't cares
@@ -65,8 +77,21 @@ bool isGreyCode(string a,string b){
 
 string replace_complements(string a,string b){
     string temp;
-    for(int i=0;i<a.length();i++)
+    for(int i=0; i<a.length(); i++)
         if(a[i]!=b[i])  temp.append("-");
+        else            temp.push_back(a[i]);
+    return temp;
+}
+
+/**Function*************************************************************
+    replace 01, 10 with XOR
+    Eg: 0110 and 0101 becomes 01^^
+***********************************************************************/
+
+string replace_XOR(string a,string b){
+    string temp;
+    for(int i=0;i<a.length();i++)
+        if(a[i]!=b[i])  temp.append("^");
         else            temp.push_back(a[i]);
     return temp;
 }
@@ -100,27 +125,46 @@ bool VectorsEqual(vector<string> a,vector<string> b){
     reduce in_LUT
 ***********************************************************************/
 vector<string> reduce(vector<string> in_LUT){
-    vector<string> newminterms;
-    int max=in_LUT.size();
-    int* checked = new int[max];
-    for(int i=0;i<max;i++){
-        for(int j=i;j<max;j++){     //If a grey code pair is found, replace the differing bits with don't cares.
+    vector<string> greyCombine;
+    vector<string> xorCombine;
+    int sizeLUT=in_LUT.size();
+    int* checkLUT = new int[sizeLUT];
+    for(int i=0; i < sizeLUT; i++){
+        for(int j=i; j < sizeLUT; j++){     //If a grey code pair is found, replace the differing bits with don't cares.
             if(isGreyCode(in_LUT[i], in_LUT[j])){
-                checked[i]=1;
-                checked[j]=1;
-                if(!in_vector(newminterms,replace_complements(in_LUT[i], in_LUT[j])))
-                    newminterms.push_back(replace_complements(in_LUT[i], in_LUT[j]));
+                checkLUT[i]=1;
+                checkLUT[j]=1;
+                if(!in_vector(greyCombine, replace_complements(in_LUT[i], in_LUT[j])))
+                    greyCombine.push_back(replace_complements(in_LUT[i], in_LUT[j]));
             }
         }
     }
-    //TODO: need to update reduce algorithm
-    //appending all reduced terms to a new vector
-    for(int i=0;i<max;i++){
-        if(checked[i]!=1 && !in_vector(newminterms, in_LUT[i]))
-            newminterms.push_back(in_LUT[i]);
+    for(int i=0; i < sizeLUT; i++){
+        if(checkLUT[i] != 1 && ! in_vector(greyCombine, in_LUT[i]))
+            greyCombine.push_back(in_LUT[i]);
     }
-    delete[] checked;
-    return newminterms;
+
+    int sizeGrey=greyCombine.size();
+    int* checkGrey = new int[sizeGrey];
+    for(int i=0; i < sizeGrey; i++){
+        for(int j=i; j < sizeGrey; j++){     //If a grey code pair is found, replace the differing bits with don't cares.
+            if(isXOR(greyCombine[i], greyCombine[j])){
+                checkGrey[i]=1;
+                checkGrey[j]=1;
+                if(!in_vector(xorCombine, replace_XOR(greyCombine[i], greyCombine[j])))
+                    xorCombine.push_back(replace_XOR(greyCombine[i], greyCombine[j]));
+            }
+        }
+    }
+    for(int i=0; i < sizeGrey; i++){
+        if(checkGrey[i] != 1 && ! in_vector(xorCombine, greyCombine[i]))
+            xorCombine.push_back(greyCombine[i]);
+    }
+
+    //appending all reduced terms to a new vector
+    delete[] checkLUT;
+    delete[] checkGrey;
+    return xorCombine;
 }
 
 
@@ -158,15 +202,14 @@ vector<string> circuit::QM(vector<int>& temp, vector<node*>& fin_node){
     vector<string> input_LUT;
     vector<string> updated_eqn;
     for(auto item: temp){
-        string x =  pad(decToBin(item), LUT_size);
+        string x = pad(decToBin(item), LUT_size);
         input_LUT.push_back(pad(decToBin(item), LUT_size));
     }
     sort(input_LUT.begin(), input_LUT.end());
     do{
         input_LUT=reduce(input_LUT);
-//        cout << "input_LUT: " << endl;
-//        for(auto i : input_LUT) cout << i << " ";
-//        cout <<  endl;
+//        cout << "while input_LUT: " << endl;
+//        for(const auto& i : input_LUT) cout << i << " ";  cout <<  endl;
         sort(input_LUT.begin(), input_LUT.end());
     }while(!VectorsEqual(input_LUT, reduce(input_LUT)));
 
@@ -177,7 +220,10 @@ vector<string> circuit::QM(vector<int>& temp, vector<node*>& fin_node){
         if (i!=input_LUT.size()-1) cout << "+";
         else cout << endl;
     }
-    return  updated_eqn;
+    return  input_LUT;
+//    return  updated_eqn;
 }
+
+
 
 

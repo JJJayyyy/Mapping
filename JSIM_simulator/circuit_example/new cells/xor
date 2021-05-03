@@ -1,0 +1,61 @@
+****** XOR 2 input gate ******
+****Input node : 1,2 *****
+******Output node : 11 ******
+**** Clock input : 10 *****
+
+***************** 2 input AND gate *************
+.SUBCKT XOR2ip 1 2 10 11 
+
+L1      5     7     7.3pH
+L2      6     7     7.3pH
+L3      2     3     8pH
+L4      1     4     8pH
+L5      8     11    8pH
+L6      9     10    8pH
+
+B1      3     0     jjmitll100 area=1.43
+RB1     3     0     6.78
+B2      4     0     jjmitll100 area=1.43
+RB2     4     0     6.78
+B3      3     5     jjmitll100 area=1.08
+RB3     3     5     8.98
+B4      4     6     jjmitll100 area=1.08
+RB4     4     6     8.98
+B5      7     8     jjmitll100 area=1.35
+RB5     7     8     7.185
+B6      9     8     jjmitll100 area=1.01
+RB6     9     8     9.604
+B7      8     0     jjmitll100 area=1.22
+RB7     8     0     7.95
+B8      11    0     jjmitll100 area=2.00
+RB8     11    0     4.85
+
+* Bias source 2.5mV and 7.41 Ohm
+IB1 0 5  pwl(0 0 5p 80uA)
+IB2 0 6  pwl(0 0 5p 80uA)
+IB3 0 11 pwl(0 0 5p 130uA)
+
+.model jjmitll100 jj(rtype=1, vg=2.8mV, cap=0.07pF, r0=160, rn=16, icrit=0.1mA)
+.ends XOR2ip
+***************** 2 input AND gate ends ****************
+X1 XOR2ip 1 2 10 11
+
+VinA 2  0  pwl (0 0 100p 0 102p 827.13u 105p 0 200p 0 202p 827.13u 205p 0)
+VinB 1  0  pwl (0 0 200p 0 202p 827.13u 205p 0 300p 0 302p 827.13u 305p 0)
+VinC 10 0  pwl (0 0 50p 0 52p 827.13u 55p 0 150p 0 152p 827.13u 155p 0 250p 0 252p 827.13u 255p 0 350p 0 352p 827.13u 355p 0 450p 0 452p 827.13u 455p 0)
+
+
+.tran 0.1p 500p 45p 0.1p
+.print nodev 1 0
+.print nodev 2 0
+*.print nodev 3 0
+*.print nodev 4 0
+*.print nodev 5 0
+*.print nodev 6 0
+*.print nodev 7 0
+*.print nodev 8 0
+*.print nodev 9 0
+.print nodev 10 0
+.print nodev 11 0
+
+

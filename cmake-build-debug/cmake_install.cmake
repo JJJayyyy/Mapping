@@ -1,4 +1,4 @@
-# Install script for directory: /Users/zhangjunyao/Desktop/EE554/sfq_parser
+# Install script for directory: /Users/zhangjunyao/Documents/GitHub/mapping
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/zhangjunyao/Desktop/EE554/sfq_parser/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/zhangjunyao/Documents/GitHub/mapping/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
