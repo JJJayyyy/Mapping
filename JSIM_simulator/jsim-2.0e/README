@@ -128,7 +128,7 @@ jsim [-options] [filenames] [-options] [filenames] ... [ redirection ]
   be clobbered!  If the rawfile option is not specified, files will
   be created in accordance with the .file lines in the input files.
   These file names should be unique, as new files are opened for
-  each simulation.  The .file lines are ignored if the rawfile option
+  each Node_Simulation.  The .file lines are ignored if the rawfile option
   is used.
 
 

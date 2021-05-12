@@ -20,24 +20,28 @@ using namespace std;
 //case 6: return("AND");
 //case 7: return("NAND");
 //case 8: return("NOT");
-//case 9: return("DFF");
-//case 10: return("SDFF");
+//case 9: return("BUFF");
+//case 10 : return("MAJ");
+//case 11: return("DFF");
+//case 12: return("SDFF");
 //default: return("NONE");
 
 class node {
+
 public:
+    vector <node*> unodes, dnodes;
 
     string node_name;
-    int gtype;
+
     int level = 0;
-    vector <node*> unodes, dnodes;
-    int val_sim;
+    int gtype;
+    int val_sim = INT_MIN;
     bool initial_node = false;                   // initial node gtype: PI and DFF
 
     node(string &name, int gate_type);
     node(string &name);
     ~node();
-    float error_rate;
+
 };
 
 

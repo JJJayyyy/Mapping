@@ -1,4 +1,4 @@
-
+INPUT(1)
 INPUT(g1)
 INPUT(g2)
 
@@ -14,8 +14,11 @@ OUTPUT(g4)
 
 
 
-g3 = AND(g1, g2)
-g4 = NAND(g1, g3)
+g3 = NOT(g1)
+g4 = NOT(g2)
+4 = AND(g1, g4)
+5 = AND(g3, g2)
+g5 = OR(4, 5)
 #5 = OR(g1, g2)
 #6 = NOR(g1, g2)
 #7 = XOR(g1, g2)

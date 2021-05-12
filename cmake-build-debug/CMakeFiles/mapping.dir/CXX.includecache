@@ -30,9 +30,15 @@ string
 climits
 -
 
-/Users/zhangjunyao/Documents/GitHub/mapping/circuit_sim.cpp
+/Users/zhangjunyao/Documents/GitHub/mapping/circuit_cut.cpp
+
+/Users/zhangjunyao/Documents/GitHub/mapping/main.cpp
+iostream
+-
 circuit.h
 /Users/zhangjunyao/Documents/GitHub/mapping/circuit.h
+circuit_cut.cpp
+/Users/zhangjunyao/Documents/GitHub/mapping/circuit_cut.cpp
 
 /Users/zhangjunyao/Documents/GitHub/mapping/node.h
 vector

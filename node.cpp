@@ -10,10 +10,11 @@ node::node(string &name, int gate_type) {
     gtype = gate_type;
 }
 
+
 node::node(string &name) {
     node_name = name;
-
 }
+
 
 node::~node() {
     unodes.clear();

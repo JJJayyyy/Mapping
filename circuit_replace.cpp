@@ -4,19 +4,19 @@
 #include "circuit.h"
 
 
+
 /**Function*************************************************************
     Delete a Node
 ***********************************************************************/
-
-void circuit::deleteNode(node* cur_node){
-    for(auto up_node : cur_node->unodes){           // remove the connection with upnodes
+void circuit::Delete_Node(node* cur_node){
+    for(auto& up_node : cur_node->unodes){           // remove the connection with upnodes
         if (find (up_node->dnodes.begin(), up_node->dnodes.end(), cur_node) != up_node->dnodes.end()){
-            disconnectNodes(cur_node, up_node);
+            Disconnect_Nodes(cur_node, up_node);
         }
     }
-    for(auto down_node : cur_node->unodes){         // remove the connection with downnodes
+    for(auto& down_node : cur_node->unodes){         // remove the connection with downnodes
         if (find (down_node->dnodes.begin(), down_node->dnodes.end(), cur_node) != down_node->dnodes.end()){
-            circuit::disconnectNodes(down_node, cur_node);
+            circuit::Disconnect_Nodes(down_node, cur_node);
         }
     }
 
@@ -36,101 +36,93 @@ void circuit::deleteNode(node* cur_node){
 }
 
 
+
 /**Function*************************************************************
     Remove the intermediate nodes between input list and root node
 ***********************************************************************/
-
-void circuit :: removeOldNode(vector<node*>& cutPI, node* root_node) {
+void circuit :: Remove_Old_Node(vector<node*>& cutPI, node* root_node) {
     unordered_set<string> cutPINameset;
-    node* cur_node;
-    for(auto pi : cutPI)    cutPINameset.insert(pi->node_name);
+    unordered_set<string> allRemovedNodeList;
     queue<string> removeList;
-    for(auto up_node : root_node->unodes){
+    node* cur_node;
+
+    for(auto& pi : cutPI)
+        cutPINameset.insert(pi->node_name);
+
+    for(auto& up_node : root_node->unodes){
         // can not find the pi in the current up node
         if(cutPINameset.find(up_node->node_name) == cutPINameset.end()){
             removeList.push(up_node->node_name);
+            allRemovedNodeList.insert(up_node->node_name);
         }
     }
+    root_node->unodes.clear();
+
     while(!removeList.empty()){
         cur_node = nameToNode[removeList.front()];
-        for(auto up_node : cur_node->unodes){
+        for(auto& up_node : cur_node->unodes){
+//            cout << "cur_node:" << cur_node->node_name << "\tup_node:" << up_node->node_name << endl;
             if(cutPINameset.find(up_node->node_name) == cutPINameset.end()){
-                removeList.push(up_node->node_name);
+                if(allRemovedNodeList.find(up_node->node_name) == allRemovedNodeList.end()){
+                    removeList.push(up_node->node_name);
+                    allRemovedNodeList.insert(up_node->node_name);
+                }
             }
         }
-        deleteNode(cur_node);
+        Delete_Node(cur_node);
         removeList.pop();
     }
+    cutPINameset.clear();
 }
 
 
 /**Function*************************************************************
     generate cut circuit based on LUTToCut
 ***********************************************************************/
-
-void circuit::fillCutToCircuit(circuit * LUTToCut){
+void circuit::Fill_Cut_To_Circuit(circuit * LUTToCut){
     node* new_Node;
-    for(auto cur_node : LUTToCut->Node_list){
-        if(nameToNode.find(cur_node->node_name) ==  nameToNode.end()){
-            new_Node = construct_Node(cur_node->node_name, cur_node->gtype);
+    unordered_map<string, string> CNNTBNN;  //current cut node name to bench node name
+    for(auto& pi : LUTToCut->Pinput){
+        CNNTBNN[pi->node_name] = pi->node_name;
+//        cout << pi->node_name << "\t" << pi->node_name << endl;
+    }
+    for(auto& pout : LUTToCut->Poutput){
+        CNNTBNN[pout->node_name] = pout->node_name;
+//        cout << pout->node_name << "\t" << pout->node_name << endl;
+    }
+
+    for(auto& cur_node : LUTToCut->Node_list){
+//        cout << cur_node->node_name << "!!!!" << endl;
+        if(CNNTBNN.find(cur_node->node_name) ==  CNNTBNN.end()){
+//            cout << cur_node->node_name << endl;
+            string name = "m" + to_string(newNodeNameCounter++);
+            CNNTBNN[cur_node->node_name] = name;
+            new_Node = Construct_Node(name, cur_node->gtype);
             cout << "build: " << new_Node->node_name << "\t" << intToGate(new_Node->gtype) << endl;
         }
     }
-    for(auto cur_node : LUTToCut->Node_list){
+    for(auto& cur_node : LUTToCut->Node_list){
         if(cur_node->gtype != gateToInt("PI")){
-            for(auto up_node : cur_node->unodes){
-                circuit::connectNodes(nameToNode[cur_node->node_name], nameToNode[up_node->node_name]);
-                cout << "connect: " << cur_node->node_name <<"\t" << up_node->node_name << endl;
+            for(auto& up_node : cur_node->unodes){
+                circuit::Connect_Nodes(nameToNode[CNNTBNN[cur_node->node_name]],
+                        nameToNode[CNNTBNN[up_node->node_name]]);
+//                cout << "connect: " << cur_node->node_name <<"\t" << up_node->node_name << " -> bench: "
+//                << CNNTBNN[cur_node->node_name] <<"\t" << CNNTBNN[up_node->node_name] << endl;
             }
         }
     }
-    for(auto po : LUTToCut->Poutput){
-        if(nameToNode.find(po->node_name) !=  nameToNode.end())
-            nameToNode[po->node_name]->gtype = po->gtype;
+    for(auto& PO : LUTToCut->Poutput){
+        if(nameToNode.find(CNNTBNN[PO->node_name]) != nameToNode.end())
+            nameToNode[CNNTBNN[PO->node_name]]->gtype = PO->gtype;
     }
     cout << "circuit refill is done" << endl;
+    CNNTBNN.clear();
+
+    /* specific node check
+    if(nameToNode.find("G11") !=  nameToNode.end()){
+        new_Node = nameToNode["G11"];
+        cout << "G11 unode size: " << new_Node->unodes.size() << endl;
+        for(auto i : new_Node->unodes) cout << i->node_name << "\t" << intToGate(i->gtype) << endl;
+    }
+     */
 }
-
-//    // assign the gate level to new circuit
-//    for(auto pi : new_circuit->Pinput) pi->level = bench->nameToNode[pi->node_name]->level;
-//    for(auto pout : new_circuit->Poutput) pout->level = bench->nameToNode[pout->node_name]->level;
-//    new_circuit->levelization_by_PI();
-//    new_circuit->depth_balancing();
-
-
-
-//TODO: \'
-//void circuit::replaceCutwithQM(vector<string> boolEqn, node* root_node){
-//    string node_n;
-//    string temp;
-//    node* cur_node;
-//    node* up_node;
-//    int idx = 0;
-//    if(boolEqn.size() > 1)  root_node->gtype = gateToInt("OR");
-//    else if (boolEqn[0].size()<5) root_node->gtype = gateToInt("AND");
-//    for(const auto& eqn : boolEqn){
-//        string name = "N";
-//        cur_node = new node(name.append(to_string(idx)), gateToInt("AND"));
-//        nameToNode[cur_node->node_name] = cur_node;
-//        Node_list.push_back(cur_node);
-//        connectNodes(root_node, cur_node);
-//        temp = eqn;
-//        if(eqn.find('*') != 0){
-//            while (temp.find('*') != 0){
-//                node_n = eqn.substr(0, eqn.find('*'));
-//                temp = eqn.substr(eqn.find('*')+1);
-//                //TODO: \'
-////            if(node_n.find('\'')==0){
-//                up_node = nameToNode[node_n];
-////            }else{cur_node = nameToNode[node_n.substr(0,node_n.length()-1)];}
-//                connectNodes(cur_node, up_node);
-//            }
-//        }else{
-//            up_node = nameToNode[node_n];
-//            connectNodes(cur_node, up_node);
-//        }
-//    }
-//    levelization();
-//    depth_balancing();
-//    splitterTreeAdder();
-//}

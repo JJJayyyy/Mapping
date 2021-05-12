@@ -5,6 +5,8 @@ vector<vector<string>> K_Feasible_Cut(node* root_node, int k);
 void Construct_Cut_Circuit_Helper(circuit* new_circuit, vector<string>& cutPI, node* cur_node, node* new_node);
 circuit* Construct_Cut_Circuit(circuit* bench, vector<string>& cutPI, node* rootNode, string& name);
 
+
+
 /**Function*************************************************************
     Do the K-feasible cut for current node
 ***********************************************************************/
@@ -13,6 +15,7 @@ vector<vector<string>> K_Feasible_Cut(node* root_node, int k){
     vector<vector<node*>> cutPIList;
     vector<vector<string>> cutPINameList;
     vector<string> rootUnodeNameList;
+
     for(auto& up_node : root_node->unodes)
         rootUnodeNameList.push_back(up_node->node_name);
 
@@ -50,7 +53,7 @@ vector<vector<string>> K_Feasible_Cut(node* root_node, int k){
                 }
             }
             if(commonCount==1){
-                int special_size = idx + cutPI[i_idx]->unodes.size() + cutPI[j_idx]->unodes.size() - 1;
+                int special_size = idx + int(cutPI[i_idx]->unodes.size() + cutPI[j_idx]->unodes.size()) - 1;
                 if(k >= special_size)  specialFlag = true;
             }
         }
@@ -59,10 +62,24 @@ vector<vector<string>> K_Feasible_Cut(node* root_node, int k){
         if(specialFlag){
             cutPI.push_back(commonNode);
             for(auto i_up : cutPI[i_idx]->unodes){
-                if(i_up->node_name != commonNode->node_name)    cutPI.push_back(i_up);
+                if(i_up->node_name != commonNode->node_name){
+                    bool add = true;
+                    for(const auto & i_up_find : cutPI){
+                        if(i_up_find->node_name == i_up->node_name) add = false;
+                    }
+                    if(add)
+                        cutPI.push_back(i_up);
+                }
             }
             for(auto j_up : cutPI[j_idx]->unodes){
-                if(j_up->node_name != commonNode->node_name)    cutPI.push_back(j_up);
+                if(j_up->node_name != commonNode->node_name){
+                    bool add = true;
+                    for(const auto & j_up_find : cutPI){
+                        if(j_up_find->node_name == j_up->node_name) add = false;
+                    }
+                    if(add)
+                        cutPI.push_back(j_up);
+                }
             }
             cutPI.erase(remove(cutPI.begin(), cutPI.end(), cutPI[j_idx]), cutPI.end());
             cutPI.erase(remove(cutPI.begin(), cutPI.end(), cutPI[i_idx]), cutPI.end());
@@ -70,16 +87,27 @@ vector<vector<string>> K_Feasible_Cut(node* root_node, int k){
         } else{
             /*if a cutPI node's unodes has a same node which is already in the CutPI: jump_flag => true
         e.g cutPI = {a b c}, a's unode = {c d};*/
-            for(const auto& i : cur_node->unodes)
-                for(const auto& j : cutPI)
+            for(const auto& i : cur_node->unodes){
+                for(const auto& j : cutPI){
                     if(j->node_name == i->node_name)
                         jump_flag = true;
+                }
+            }
+
+            /*if a cutPI node's unodes has a same node which is already in the CutPI: jump_flag => true
+        e.g cutPI = {a b c}, a's unode = {e e};*/
+            for (int l = 0; l < cur_node->unodes.size(); l++) {
+                for (int i = l+1; i < cur_node->unodes.size(); i++) {
+                    if(cur_node->unodes[i] == cur_node->unodes[l])
+                        jump_flag = true;
+                }
+            }
 
             /*if a cutPI node's unodes only has a same node which is already in the CutPI, remove this node
              e.g cutPI = {a b c}, a's unode = {c}   =>     {b, c} is also a feasible cut*/
             if(jump_flag && cur_node->unodes.size() == 1){
                 cutPI.erase(remove(cutPI.begin(), cutPI.end(), cur_node), cutPI.end());
-                flag = true;
+                jump_flag = true;
             }
 
             /*if a cutPI
@@ -92,7 +120,9 @@ vector<vector<string>> K_Feasible_Cut(node* root_node, int k){
                && cur_node->gtype != circuit::gateToInt("PI")
                && cur_node->gtype != circuit::gateToInt("DFF")
                && cur_node->gtype != circuit::gateToInt("SP")){
-                for(auto& up_node : cur_node->unodes)    cutPI.push_back(up_node);
+                for(auto& up_node : cur_node->unodes)    {
+                    cutPI.push_back(up_node);
+                }
                 if (size >= 2)    flag = true;      // only consider the cut has 2 more input situation
                 cutPI.erase(remove(cutPI.begin(), cutPI.end(), cur_node), cutPI.end());
             }
@@ -102,14 +132,23 @@ vector<vector<string>> K_Feasible_Cut(node* root_node, int k){
         }
 
 
+//        int counter = 0;
+//        for(const auto& node : cutPI)
+//            if(node->node_name[0] == 'M') counter++;
+//        if(counter == cutPI.size())
+//            flag = false;
+
+
+//        cout << "size" << cutPI.size() << endl;
+//        for (auto s : cutPI) {
+//            cout << s->node_name <<"\t"<<endl;
+//        }
+//        cout << endl;
+
         if(flag)    cutPIList.push_back(cutPI);     // add current cutPI to cutPI list
-//        for(const auto& j : cutPI) cout << j->node_name << " ";    cout << endl;
-//        cout << "idx: " << idx << endl;
     }
 
     // remove the cut which is just the upstream node of root_node
-
-
     if(!cutPIList.empty()){
         for(auto & i : cutPIList){
             vector<string>cutPIName;
@@ -127,7 +166,7 @@ vector<vector<string>> K_Feasible_Cut(node* root_node, int k){
 
 
     if(!cutPINameList.empty()){
-        cout << "\nCurrent node: "<< root_node->node_name << endl;
+        cout << "\n\nCurrent node: "<< root_node->node_name << endl;
         cout << "cuts: ";
         for(int i = 0; i < cutPINameList.size(); i++){
             cout << "{";
@@ -140,22 +179,26 @@ vector<vector<string>> K_Feasible_Cut(node* root_node, int k){
         }
         cout << endl;
     }
+    cutPI.clear();
+    cutPIList.clear();
+    rootUnodeNameList.clear();
     return cutPINameList;
 }
+
 
 
 /**Function*************************************************************
     form the cut circuit base on the cut Inputs
 ***********************************************************************/
 circuit* Construct_Cut_Circuit(circuit* bench, vector<string>& cutPI, node* rootNode, string& name){
-    circuit* new_circuit = new circuit(name, false);
+    auto* new_circuit = new circuit(name, false);
     node* new_node = new node(rootNode->node_name, rootNode->gtype);
     new_circuit->Node_list.push_back(new_node);
     new_circuit->Poutput.push_back(new_node);
     new_circuit->nameToNode[new_node->node_name] = new_node;
 
     for(auto& pi_name : cutPI){
-        new_circuit->construct_PI(pi_name);
+        new_circuit->Construct_PI(pi_name);
     }
 
     for(auto& cur_node : rootNode->unodes){
@@ -180,6 +223,7 @@ circuit* Construct_Cut_Circuit(circuit* bench, vector<string>& cutPI, node* root
 }
 
 
+
 /**Function*************************************************************
     recursive method to form nodes in the cutCircuit method
 ***********************************************************************/
@@ -187,11 +231,11 @@ void Construct_Cut_Circuit_Helper(circuit* new_circuit, vector<string>& cutPI, n
     auto pi_find = find( cutPI.begin( ), cutPI.end( ), cur_node->node_name);
     node* new_up_node;
     if (pi_find == cutPI.end())
-        new_up_node = new_circuit->construct_Node(cur_node->node_name, cur_node->gtype);
+        new_up_node = new_circuit->Construct_Node(cur_node->node_name, cur_node->gtype);
     else{
         new_up_node = new_circuit->nameToNode[cur_node->node_name];
     }
-    circuit::connectNodes(new_node, new_up_node);
+    circuit::Connect_Nodes(new_node, new_up_node);
     if(pi_find == cutPI.end())
         for(auto& up_cur_node : cur_node->unodes)
             Construct_Cut_Circuit_Helper(new_circuit, cutPI, up_cur_node, new_up_node);
@@ -203,8 +247,7 @@ void Construct_Cut_Circuit_Helper(circuit* new_circuit, vector<string>& cutPI, n
     Construct the cut Circuit based on LUT
 ***********************************************************************/
 circuit* Construct_LUT_Circuit(vector<string>& LUT, unordered_map<string, int>& PI_PO_Level, vector<string> PI, string& PO_name, string& name){
-    cout << "from LUT to circuit" << endl;
-    circuit* new_circuit = new circuit(name, false);
+    auto* new_circuit = new circuit(name, false);
     node* new_node;
     node* cur_node;
     node* up_1_Node;
@@ -214,11 +257,11 @@ circuit* Construct_LUT_Circuit(vector<string>& LUT, unordered_map<string, int>& 
     int idx = 0;
 
     // construct PI;
-    for(auto& PI_name : PI)   new_circuit->construct_PI(PI_name);
+    for(auto& PI_name : PI) new_circuit->Construct_PI(PI_name);
 
     //  construct NOT node for PI
     if(LUT.size()>1){      //  PO is OR gate
-        PO = new_circuit->construct_Node(PO_name, circuit::gateToInt("OR"));
+        PO = new_circuit->Construct_Node(PO_name, circuit::gateToInt("OR"));
         new_circuit->Poutput.push_back(PO);
         for(const auto& logic : LUT){
             for(int i = 0; i < logic.size(); i++){
@@ -227,8 +270,8 @@ circuit* Construct_LUT_Circuit(vector<string>& LUT, unordered_map<string, int>& 
                     string midNodeName = "M";
                     midNodeName.append(to_string(idx));
                     idx++;
-                    new_node = new_circuit->construct_Node(midNodeName, circuit::gateToInt("NOT"));
-                    circuit::connectNodes(new_node, cur_node);
+                    new_node = new_circuit->Construct_Node(midNodeName, circuit::gateToInt("NOT"));
+                    circuit::Connect_Nodes(new_node, cur_node);
                 }
             }
         }
@@ -239,11 +282,11 @@ circuit* Construct_LUT_Circuit(vector<string>& LUT, unordered_map<string, int>& 
             if (piHash['-'].size() == PI.size()-1) {                                                // only one PI in sub_PO
                 if (!piHash['1'].empty()) {
                     up_1_Node = new_circuit->nameToNode[PI[piHash['1'][0]]];             // piHash['1'][0]: get PI idx
-                    circuit::connectNodes(PO, up_1_Node);
+                    circuit::Connect_Nodes(PO, up_1_Node);
                 }
                 else if (!piHash['0'].empty()) {
                     up_1_Node = new_circuit->nameToNode[PI[piHash['0'][0]]]->dnodes[0];  // get this PI is inverse
-                    circuit::connectNodes(PO, up_1_Node);
+                    circuit::Connect_Nodes(PO, up_1_Node);
                 }
                 else {
                     cout << "there is only one ^ char, check the LUT" << endl;
@@ -253,37 +296,37 @@ circuit* Construct_LUT_Circuit(vector<string>& LUT, unordered_map<string, int>& 
                 string subPOName = "M";
                 subPOName.append(to_string(idx));
                 idx++;
-                up_1_Node = new_circuit->construct_Node(subPOName, circuit::gateToInt("XOR"));
-                circuit::connectNodes(PO, up_1_Node);
+                up_1_Node = new_circuit->Construct_Node(subPOName, circuit::gateToInt("XOR"));
+                circuit::Connect_Nodes(PO, up_1_Node);
                 for (auto i : piHash['^']) {
                     up_2_Node = new_circuit->nameToNode[PI[i]];
-                    circuit::connectNodes(up_1_Node, up_2_Node);
+                    circuit::Connect_Nodes(up_1_Node, up_2_Node);
                 }
             }
             else {                                                                          // sub_PO is AND
                 string subPOName = "M";
                 subPOName.append(to_string(idx));
                 idx++;
-                up_1_Node = new_circuit->construct_Node(subPOName, circuit::gateToInt("AND"));
-                circuit::connectNodes(PO, up_1_Node);
+                up_1_Node = new_circuit->Construct_Node(subPOName, circuit::gateToInt("AND"));
+                circuit::Connect_Nodes(PO, up_1_Node);
                 if (!piHash['^'].empty()) {                                                 // sub_sub_PO is XOR
                     string sub_subPOName = "M";
                     sub_subPOName.append(to_string(idx));
                     idx++;
-                    up_2_Node = new_circuit->construct_Node(sub_subPOName, circuit::gateToInt("XOR"));
-                    circuit::connectNodes(up_1_Node, up_2_Node);
+                    up_2_Node = new_circuit->Construct_Node(sub_subPOName, circuit::gateToInt("XOR"));
+                    circuit::Connect_Nodes(up_1_Node, up_2_Node);
                     for (auto i : piHash['^']) {
                         up_3_Node = new_circuit->nameToNode[PI[i]];
-                        circuit::connectNodes(up_2_Node, up_3_Node);
+                        circuit::Connect_Nodes(up_2_Node, up_3_Node);
                     }
                 }
                 for (auto i : piHash['0']) {
                     up_2_Node = new_circuit->nameToNode[PI[i]]->dnodes[0];                  // get this PI is inverse
-                    circuit::connectNodes(up_1_Node, up_2_Node);
+                    circuit::Connect_Nodes(up_1_Node, up_2_Node);
                 }
                 for (auto i : piHash['1']) {
                     up_2_Node = new_circuit->nameToNode[PI[i]];
-                    circuit::connectNodes(up_1_Node, up_2_Node);
+                    circuit::Connect_Nodes(up_1_Node, up_2_Node);
                 }
             }
         }
@@ -292,17 +335,17 @@ circuit* Construct_LUT_Circuit(vector<string>& LUT, unordered_map<string, int>& 
         string logic = LUT[0];
         unordered_map<char, vector<int>> piHash = {{'0', {}}, {'1', {}}, {'-', {}}, {'^', {}}};
         for (int i = 0; i < logic.length(); i++) piHash[logic[i]].push_back(i);
-        PO = new_circuit->construct_Node(PO_name);
+        PO = new_circuit->Construct_Node(PO_name);
         new_circuit->Poutput.push_back(PO);
         if (piHash['-'].size() == PI.size()-1) {                                                // only one PI in sub_PO
             if (!piHash['1'].empty()) {
                 up_1_Node = new_circuit->nameToNode[PI[piHash['1'][0]]];             // piHash['1'][0]: get PI idx
-                circuit::connectNodes(PO, up_1_Node);
+                circuit::Connect_Nodes(PO, up_1_Node);
                 PO->gtype = circuit::gateToInt("SDFF");
             }
             else if (!piHash['0'].empty()) {
                 up_1_Node = new_circuit->nameToNode[PI[piHash['0'][0]]];  // get this PI is inverse
-                circuit::connectNodes(PO, up_1_Node);
+                circuit::Connect_Nodes(PO, up_1_Node);
                 PO->gtype = circuit::gateToInt("NOT");
             }
             else {
@@ -312,7 +355,7 @@ circuit* Construct_LUT_Circuit(vector<string>& LUT, unordered_map<string, int>& 
         else if (piHash['-'].size() == 2 && (!piHash['^'].empty())) {                  // sub_PO is XOR
             for (auto i : piHash['^']) {
                 up_1_Node = new_circuit->nameToNode[PI[i]];
-                circuit::connectNodes(PO, up_1_Node);
+                circuit::Connect_Nodes(PO, up_1_Node);
                 PO->gtype = circuit::gateToInt("XOR");
             }
         }
@@ -323,8 +366,8 @@ circuit* Construct_LUT_Circuit(vector<string>& LUT, unordered_map<string, int>& 
                     string midNodeName = "M";
                     midNodeName.append(to_string(idx));
                     idx++;
-                    new_node = new_circuit->construct_Node(midNodeName, circuit::gateToInt("NOT"));
-                    circuit::connectNodes(new_node, cur_node);
+                    new_node = new_circuit->Construct_Node(midNodeName, circuit::gateToInt("NOT"));
+                    circuit::Connect_Nodes(new_node, cur_node);
                 }
             }
             PO->gtype = circuit::gateToInt("AND");
@@ -332,56 +375,40 @@ circuit* Construct_LUT_Circuit(vector<string>& LUT, unordered_map<string, int>& 
                 string subPOName = "M";
                 subPOName.append(to_string(idx));
                 idx++;
-                up_1_Node = new_circuit->construct_Node(subPOName, circuit::gateToInt("XOR"));
-                circuit::connectNodes(PO, up_1_Node);
+                up_1_Node = new_circuit->Construct_Node(subPOName, circuit::gateToInt("XOR"));
+                circuit::Connect_Nodes(PO, up_1_Node);
                 for (auto i : piHash['^']) {
                     up_2_Node = new_circuit->nameToNode[PI[i]];
-                    circuit::connectNodes(up_1_Node, up_2_Node);
+                    circuit::Connect_Nodes(up_1_Node, up_2_Node);
                 }
             }
             for (auto i : piHash['0']) {
                 up_1_Node = new_circuit->nameToNode[PI[i]]->dnodes[0];  // get this PI is inverse
-                circuit::connectNodes(PO, up_1_Node);
+                circuit::Connect_Nodes(PO, up_1_Node);
             }
             for (auto i : piHash['1']) {
                 up_1_Node = new_circuit->nameToNode[PI[i]];
-                circuit::connectNodes(PO, up_1_Node);
+                circuit::Connect_Nodes(PO, up_1_Node);
             }
         }
     }
 
-    cout << "LUT Cut circuit is generated" << endl;
+    cout << "Cut circuit is generated from LUT" << endl;
 
-    int minimum_level = INT_MAX;
-    for(auto pi : new_circuit->Pinput) {
-        minimum_level = (PI_PO_Level[pi->node_name]<minimum_level) ? PI_PO_Level[pi->node_name] : minimum_level;
-    }
-    for(auto pi : new_circuit->Pinput) pi->level = PI_PO_Level[pi->node_name]-minimum_level+1;
-    for(auto pout : new_circuit->Poutput) pout->level = PI_PO_Level[pout->node_name]-minimum_level+1;
+//    int minimum_level = INT_MAX;
+//    for(auto pi : new_circuit->Pinput) {
+//        minimum_level = (PI_PO_Level[pi->node_name]<minimum_level) ? PI_PO_Level[pi->node_name] : minimum_level;
+//    }
+//    for(auto pi : new_circuit->Pinput) pi->level = PI_PO_Level[pi->node_name]-minimum_level+1;
+//    for(auto pout : new_circuit->Poutput) pout->level = PI_PO_Level[pout->node_name]-minimum_level+1;
 
 //    new_circuit->levelization_by_PI();
     new_circuit->Levelization();
-    // update the max_lvl and levelList
-    new_circuit->max_lvl = new_circuit->Poutput[0]->level;
-    for(auto node : new_circuit->Node_list) {
-        new_circuit->levelList[node->level].push_back(node->node_name);
-        new_circuit->max_fin = (new_circuit->max_fin > node->unodes.size()) ? new_circuit->max_fin : node->unodes.size();
-        new_circuit->max_fout = (new_circuit->max_fout > node->dnodes.size()) ? new_circuit->max_fout : node->dnodes.size();
-    }
 //    /** cut circuit check
-    new_circuit->cut_Depth_balancing();
-    new_circuit->Splitter_Binary_Tree_Insertion();
-    new_circuit->Levelization();
+//    new_circuit->cut_Depth_balancing();
+//    new_circuit->Splitter_Binary_Tree_Insertion();
+//    new_circuit->Levelization();
 //    new_circuit->levelization_by_PI();
-    new_circuit->pc();
-//     cout << "node list: ";
-//     for(auto n : new_circuit->Node_list) cout << n->node_name << " ";
-//     cout << endl;
-////     cout << "\nPI list:" << endl;
-////     for(auto n : new_circuit->Pinput) cout << n->node_name << "\tlevel: " << n->level << endl;
-////     cout << "PO list: " << endl;
-////     for(auto n : new_circuit->Poutput) cout << n->node_name << "\tlevel: " << n->level << endl;
-////     **/
-    cout << endl;
+//    new_circuit->pc();
     return new_circuit;
 }

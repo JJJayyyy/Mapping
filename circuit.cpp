@@ -8,16 +8,22 @@
 ***********************************************************************/
 circuit::circuit(const string& file_name, bool readFile){
     if(readFile){
-        Read_Bench_File(file_name);
-        Levelization();
+        if(Read_Bench_File(file_name)){
+            Levelization();
+            Splitter_Insertion();
+//        pc();
 //        Depth_Balancing();
-        Splitter_Binary_Tree_Insertion();
-        Levelization();
-        cout << endl;
+//        Splitter_Binary_Tree_Insertion();
+            Levelization();
+            cout << endl;
+        } else{
+            delete this;
+        }
     }else{
         circuit_name = file_name;
     }
 }
+
 
 
 /**Function*************************************************************
@@ -31,6 +37,7 @@ circuit::~circuit() {
     nameToNode.clear();
     gateCounter.clear();
 }
+
 
 
 /**Function*************************************************************
@@ -49,7 +56,7 @@ vector<string> Read_Line_Helper(string& line){
         if (i==2) {
             info[i-1] = info[i].substr(0, info[i].find('('));
             transform(info[i-1].begin(),info[i-1].end(),info[i-1].begin(),::toupper);
-            if(info[i-1]=="DFF" || info[i-1]=="NOT" || info[i-1]=="SDFF")
+            if(info[i-1]=="DFF" || info[i-1]=="NOT" || info[i-1]=="SDFF" || info[i-1]=="BUFF")
                 info[i] = info[i].substr(info[i].find('(')+1, info[i].find(')')-info[i].find('(')-1);
             else
                 info[i] = info[i].substr(info[i].find('(')+1, info[i].find(',')-info[i].find('(')-1);
@@ -60,10 +67,11 @@ vector<string> Read_Line_Helper(string& line){
 }
 
 
+
 /**Function*************************************************************
     read the bench file into a netlist
 ***********************************************************************/
-void circuit::Read_Bench_File(const string& file_name){
+bool circuit::Read_Bench_File(const string& file_name){
     this->circuit_name = file_name;
     string line;
     node* node_read;
@@ -73,51 +81,58 @@ void circuit::Read_Bench_File(const string& file_name){
     circuit_infile.open(file_name, ios::in);
     if (!circuit_infile.is_open()) {
         std::cout << "Error opening file\n";
-        return;
+        return false;
     }
 
     while(!circuit_infile.eof()) {
         getline(circuit_infile, line);
         if (strncmp(line.c_str(), "INPUT", 5) == 0) {
             nodeName = line.substr(line.find('(')+1, line.find(')') - line.find('(')-1);
-            construct_PI(nodeName);
+            Construct_PI(nodeName);
         } else if (strncmp(line.c_str(), "OUTPUT", 5) == 0){
             nodeName = line.substr(line.find('(')+1, line.find(')') - line.find('(')-1);
-            node_read = construct_Node(nodeName);
+            node_read = Construct_Node(nodeName);
             Poutput.push_back(node_read);
         }else{
             vector<string> info;
             if (line[0]!='#')   info = Read_Line_Helper(line);                // 0: out_node, 1: gate, 2-4, input gate;
             if (info.empty()) continue;
             // logic conversion:    NAND->AND, NOR->OR, XNOR->XOR
-            if(info[1]=="NOR" || info[1]=="NAND" || info[1]=="XNOR"){
+            if(info[1]=="NOR" || info[1]=="NAND" || info[1]=="XNOR" || info[1] == "BUFF"){
                 int new_gate_type = gateToInt(info[1])-1;
                 // output node does not exist, add output node into the circuit
                 if (nameToNode.find(info[0]) == nameToNode.end()) {
                     string inter_node_name = "I";                              // set internode name = I+node_name
                     inter_node_name.append(info[0]);
-                    node_read_unode = construct_Node(inter_node_name, new_gate_type);
+                    node_read_unode = Construct_Node(inter_node_name, new_gate_type);
                     // set read node to NOT
-                    node_read = construct_Node(info[0], gateToInt("NOT"));
+                    node_read = Construct_Node(info[0], gateToInt("NOT"));
                 }
                 else {
                     string inter_node_name = "I";
                     inter_node_name.append(info[0]);                        // set internode = I+node_name
-                    node_read_unode = construct_Node(inter_node_name, new_gate_type);
+                    node_read_unode = Construct_Node(inter_node_name, new_gate_type);
                     node_read = nameToNode[info[0]];
                     node_read->gtype = gateToInt("NOT");
                 }
-                connectNodes(node_read, node_read_unode);
+                Connect_Nodes(node_read, node_read_unode);
                 node_read = node_read_unode;
             }
-            else {
+            else if(info[1]=="XOR" || info[1]=="AND" || info[1]=="OR" || info[1] == "DFF" || info[1] == "NOT"){
                 if (nameToNode.find(info[0]) == nameToNode.end()) {         // add output node into the circuit
-                    node_read = construct_Node(info[0], gateToInt(info[1]));
+                    node_read = Construct_Node(info[0], gateToInt(info[1]));
                 } else {
                     node_read = nameToNode[info[0]];
                     node_read->gtype = gateToInt(info[1]);
                     if(info[1] == "DFF")    node_read->initial_node = true;
                 }
+            }else{
+                cout << "**************************\n"
+                     << "Circuit format has problem\n"
+                     << "**************************\n";
+                cout << "check node:" << info[0];
+                circuit_infile.close();
+                return false;
             }
             // connect read node with its upstream nodes
             for(int i = 2;  i < info.size(); i++){
@@ -128,13 +143,15 @@ void circuit::Read_Bench_File(const string& file_name){
                 } else{
                     node_read_unode = nameToNode[info[i]];
                 }
-                connectNodes(node_read,node_read_unode);
+                Connect_Nodes(node_read, node_read_unode);
             }
         }
     }
     cout << "Circuit file read is done" << endl;
     circuit_infile.close();
+    return true;
 }
+
 
 
 /**Function*************************************************************
@@ -156,6 +173,7 @@ void circuit::Levelization() {
     while(leveled_node<Node_list.size()){
         for(auto& node : Node_list){
 //            cout << "node name: " << node->node_name << " level: " << node->level << endl;
+//            cout << "leveled: " << leveled_node << "\tNode_list size: " << Node_list.size() << endl;
             if (node->level > 0) continue;                     // skip the leveled nodes
             int max_fin_lev = 0;                                // record the maximum level of upstream nodes
             int num_fin_lev = 0;                                // count number of upstream nodes already leveled
@@ -204,6 +222,7 @@ void circuit::Levelization() {
     this->level_flag = 1;
     cout << "Levelization is done" << endl;
 }
+
 
 
 /**Function*************************************************************
@@ -267,6 +286,7 @@ void circuit::Levelization_By_PI(){
 }
 
 
+
 /**Function*************************************************************
     Balance the circuit depth
 ***********************************************************************/
@@ -275,10 +295,12 @@ void circuit::Depth_Balancing(){
         cout << "circuit needs to be leveled first before balancing the depth" << endl;
         return;
     }
+
     node* added_sDFF;
     node* upNode_db;
     node* downNode_db;
     node* cur_node;
+
     int size = Node_list.size();
     for(int i = 0; i < size; i++){
         cur_node = Node_list[i];
@@ -293,13 +315,13 @@ void circuit::Depth_Balancing(){
                 upNode_db = up_node;
                 downNode_db = cur_node;
                 int numSDFF = max_fin_lev - up_node->level;
-                for(int i = 0; i< numSDFF; i++){   // iterate to add SDFF
+                for(int j = 0; j < numSDFF; j++){   // iterate to add SDFF
                     string name = "D" + to_string(SDFFNameCounter);
-                    added_sDFF = construct_Node(name, gateToInt("SDFF"));
+                    added_sDFF = Construct_Node(name, gateToInt("SDFF"));
                     SDFFNameCounter++;
-                    disconnectNodes(downNode_db,upNode_db);
-                    connectNodes(added_sDFF, upNode_db);
-                    connectNodes(downNode_db,added_sDFF);
+                    Disconnect_Nodes(downNode_db, upNode_db);
+                    Connect_Nodes(added_sDFF, upNode_db);
+                    Connect_Nodes(downNode_db, added_sDFF);
                     upNode_db = added_sDFF;
                 }
             }
@@ -309,7 +331,11 @@ void circuit::Depth_Balancing(){
 }
 
 
+
 //TODO: remove?
+/**Function*************************************************************
+    Balance the circuit depth
+***********************************************************************/
 void circuit::cut_Depth_balancing(){
     if(level_flag != 1) cout << "circuit needs to be leveled first" << endl;
     node* added_sDFF;
@@ -329,11 +355,11 @@ void circuit::cut_Depth_balancing(){
                 int numSDFF = max_fin_lev - up_node->level;
                 for(int i = 0; i< numSDFF; i++){            // iterate to add SDFF
                     string name = "D" + to_string(SDFFNameCounter);
-                    added_sDFF = construct_Node(name, gateToInt("SDFF"));
+                    added_sDFF = Construct_Node(name, gateToInt("SDFF"));
                     SDFFNameCounter++;
-                    disconnectNodes(downNode_db,upNode_db);
-                    connectNodes(added_sDFF, upNode_db);
-                    connectNodes(downNode_db,added_sDFF);
+                    Disconnect_Nodes(downNode_db, upNode_db);
+                    Connect_Nodes(added_sDFF, upNode_db);
+                    Connect_Nodes(downNode_db, added_sDFF);
                     upNode_db = added_sDFF;
                 }
             }
@@ -341,6 +367,7 @@ void circuit::cut_Depth_balancing(){
     }
     cout << "depth balancing done" << endl;
 }
+
 
 
 /**Function*************************************************************
@@ -365,14 +392,14 @@ void circuit::Splitter_Binary_Tree_Insertion() {
                 downNode_sta = cur_node->dnodes[0];
                 string name = "s" + to_string(splitterNameCounter);                         // create node sp1
                 splitterNameCounter++;
-                added_sta = construct_Node(name, gateToInt("SP"));
-                disconnectNodes(downNode_sta, cur_node);
-                connectNodes(added_sta,upNode_sta);
-                connectNodes(downNode_sta,added_sta);
+                added_sta = Construct_Node(name, gateToInt("SP"));
+                Disconnect_Nodes(downNode_sta, cur_node);
+                Connect_Nodes(added_sta, upNode_sta);
+                Connect_Nodes(downNode_sta, added_sta);
                 if(d_idx == size-1){
                     downNode_sta = cur_node->dnodes[0];
-                    disconnectNodes(downNode_sta,cur_node);
-                    connectNodes(downNode_sta,added_sta);
+                    Disconnect_Nodes(downNode_sta, cur_node);
+                    Connect_Nodes(downNode_sta, added_sta);
                 }
                 upNode_sta = added_sta;
             }
@@ -382,7 +409,39 @@ void circuit::Splitter_Binary_Tree_Insertion() {
 }
 
 
+void circuit::Splitter_Insertion() {
+    if(level_flag != 1) {
+        cout << "circuit needs to be leveled first before inserting the splitter binary trees" << endl;
+        return;
+    }
+    node *SP_node;
+    node *downNode_sta;
+    node* cur_node;
+    int nodesize = Node_list.size();
+    for(int i = 0; i < nodesize; i++){
+        cur_node = Node_list[i];
+        if (cur_node->dnodes.size() > 1 && cur_node->gtype != gateToInt("SP")) {
+            unsigned long size = cur_node->dnodes.size();                           //there is not a "-1"
+            string name = "s" + to_string(splitterNameCounter);                         // create node sp1
+            splitterNameCounter++;
+            SP_node = Construct_Node(name, gateToInt("SP"));
+
+            for (int d_idx = 0; d_idx < size; d_idx++) {
+                downNode_sta = cur_node->dnodes[0];                 // must be '0'
+                Disconnect_Nodes(downNode_sta, cur_node);
+                Connect_Nodes(downNode_sta, SP_node);
+            }
+            Connect_Nodes(SP_node, cur_node);
+        }
+    }
+    cout << "Splitters are inserted" << endl;
+}
+
+
 //TODO: move DFF and inverters from upstream to downstream
+/**Function*************************************************************
+    DFF optimization
+***********************************************************************/
 void circuit::DFF_optimization(){
     vector<string> reduceNot;
     vector<string> reduceDFF;

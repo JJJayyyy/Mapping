@@ -353,7 +353,7 @@ Default is 0.5e-15.
 LTE : check for local truncation error in choosing step size,
 default no LTE.
 .LP
-IGWARN : ignore warning and proceed with simulation.
+IGWARN : ignore warning and proceed with Node_Simulation.
 .LP
 NUMDGT=VALUE : number of digits to be printed, default is 3.
 .RE
