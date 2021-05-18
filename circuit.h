@@ -27,14 +27,23 @@ public:
 
     unordered_map<string, int> gateCounter;
     unordered_map<string, float> errorRateMap = {{"PI",0},
-                                                 {"SP", 0.03},
-                                                 {"XOR", 0.07},
-                                                 {"OR", 0.09},
-                                                 {"AND",0.09},
-                                                 {"MAJ",0.09},
-                                                 {"NOT",0.05},
-                                                 {"DFF",0.08},
-                                                 {"SDFF",0.08}};
+                                                 {"SP", 0.0003},
+                                                 {"XOR", 0.0007},
+                                                 {"OR", 0.0009},
+                                                 {"AND",0.0009},
+                                                 {"MAJ",0.0009},
+                                                 {"NOT",0.0005},
+                                                 {"DFF",0.0008},
+                                                 {"SDFF",0.0008}};
+    unordered_map<string, int> JJNumMap = {{"PI",0},
+                                                 {"SP", 3},
+                                                 {"XOR", 7},
+                                                 {"OR", 9},
+                                                 {"AND",9},
+                                                 {"MAJ",9},
+                                                 {"NOT",5},
+                                                 {"DFF",8},
+                                                 {"SDFF",8}};
     unordered_map<string,node*> nameToNode;
     unordered_map<int, vector<string>> levelList;
     vector<node*> Node_list, Pinput, Poutput;
@@ -58,7 +67,16 @@ public:
     void cut_Depth_balancing();
     void Splitter_Binary_Tree_Insertion();
     void Splitter_Insertion();
-    void DFF_optimization();
+
+    void Post_Optimization();
+    void DFF_Optimization();
+    void DFF_Optimization_Helper(int& count, node* cur_node);
+    void DFF_To_INV(int& count, node* cur_node);
+
+    void INV_Optimization();
+    void INV_Optimization_Helper(int &count, node *cur_node);
+    void Remove_Up_INV(int miniNum, node *cur_node);
+    string Add_Down_INV(int miniNum, node *cur_node);
     ~circuit();
 
 
@@ -72,7 +90,7 @@ public:
     node* Construct_Node(string &name, int int_gate_type);
     node* Construct_Node(string &name);
     int Get_Gate_Total_Num();
-    float Error_Rate_Calculation();
+    double Error_Rate_Calculation();
 
 
     /**** Circuit Simulation ****/
@@ -87,6 +105,11 @@ public:
     void Remove_Old_Node(vector<node *>& cutPI, node *root_node);
 
 
+    void pcGateOnly();
+
+    int JJ_Calculation();
+
+    void Highfanin_To_Low(int faninSize);
 };
 
 

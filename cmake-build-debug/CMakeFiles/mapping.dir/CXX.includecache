@@ -6,6 +6,8 @@
 
 #IncludeRegexTransform: 
 
+/Users/zhangjunyao/Documents/GitHub/mapping/LUT_generation.cpp
+
 /Users/zhangjunyao/Documents/GitHub/mapping/circuit.h
 node.h
 /Users/zhangjunyao/Documents/GitHub/mapping/node.h
@@ -39,6 +41,8 @@ circuit.h
 /Users/zhangjunyao/Documents/GitHub/mapping/circuit.h
 circuit_cut.cpp
 /Users/zhangjunyao/Documents/GitHub/mapping/circuit_cut.cpp
+LUT_generation.cpp
+/Users/zhangjunyao/Documents/GitHub/mapping/LUT_generation.cpp
 
 /Users/zhangjunyao/Documents/GitHub/mapping/node.h
 vector

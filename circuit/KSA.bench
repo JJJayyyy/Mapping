@@ -1,0 +1,50 @@
+
+INPUT(a0)
+INPUT(a1)
+INPUT(a2)
+INPUT(a3)
+INPUT(b0)
+INPUT(b1)
+INPUT(b2)
+INPUT(b3)
+INPUT(cin)
+
+
+OUTPUT(s0)
+OUTPUT(s1)
+OUTPUT(s2)
+OUTPUT(s3)
+OUTPUT(cout)
+
+1 = XOR(a0, b0)
+s0 = XOR(1, cin)
+
+2 = XOR(a1, b1)
+3 = AND(a0, b0)
+4 = XOR(2,3)
+21 = AND(1, cin)
+s1 = OR(4, 21)
+
+5 = XOR(a2, b2)
+6 = AND(a1, b1)
+7 = XOR(5, 6)
+8 = AND(2, 3)
+9 = AND(2, 1, cin)
+s2 = OR(7, 8, 9)
+
+10 = XOR(a3, b3)
+11 = AND(a2, b2)
+12 = XOR(10, 11)
+13 = AND(5, 6)
+14 = AND(5, 2, 3)
+15 = AND(5, 2, 1, cin)
+s3 = OR(12, 13, 14, 15)
+
+16 = AND(a3, b3)
+17 = AND(10, 11)
+18 = AND(10, 5, 6)
+19 = AND(10, 5, 2, 3)
+20 = AND(10, 5, 2, 1, cin)
+cout = OR(16, 17, 18, 19, 20)
+
+

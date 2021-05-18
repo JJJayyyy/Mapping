@@ -21,6 +21,7 @@ CMakeFiles/mapping.dir/circuit_util.cpp.o: ../circuit.h
 CMakeFiles/mapping.dir/circuit_util.cpp.o: ../circuit_util.cpp
 CMakeFiles/mapping.dir/circuit_util.cpp.o: ../node.h
 
+CMakeFiles/mapping.dir/main.cpp.o: ../LUT_generation.cpp
 CMakeFiles/mapping.dir/main.cpp.o: ../circuit.h
 CMakeFiles/mapping.dir/main.cpp.o: ../circuit_cut.cpp
 CMakeFiles/mapping.dir/main.cpp.o: ../main.cpp

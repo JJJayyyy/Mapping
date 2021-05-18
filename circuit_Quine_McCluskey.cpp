@@ -11,12 +11,21 @@
 
 using namespace std;
 string decToBin(int n);
-string replace_complements(string a,string b);
+string pad(const string& bin, int LUT_size);
 bool isGreyCode(string a,string b);
+int isXOR(string& a, string& b);
+unordered_map<int, int> isMAJ(string& a, string& b, string& c);
+string replace_complements(string a,string b);
+string replace_XOR(string& a, string& b);
+string replace_XNOR(string& a, string& b);
+string replace_MAJ(string& a, string& b, string& c, unordered_map<int, int> MAJIdxMap);
 bool VectorsEqual(vector<string> a,vector<string> b);
 bool in_vector(const vector<string>& a,const string& b);
-vector<string> reduce(vector<string> in_LUT);
-void BooleanExpressionCheck(vector<string> input_LUT, vector<string> updated_eqn, string dontcare, vector<node*>& fin_node);
+vector<string> reduce(vector<string>& implicants);
+vector<string> MAJ_Reduce(vector<string>& greyCombine);
+vector<string> XOR_Reduce(vector<string>& majCombine);
+void BooleanExpressionCheck(vector<string> input_LUT, vector<string> updated_eqn, const string& dontcare, vector<node*>& fin_node);
+void Debugging(vector<string>& input_LUT, vector<string>& input_LUT_X, vector<string>& input_LUT_M, vector<int>& temp);
 
 
 
@@ -62,16 +71,96 @@ bool isGreyCode(string a,string b){
 /**Function*************************************************************
    function to check if two bits are XOR gate
 ***********************************************************************/
-bool isXOR(string a, string b){
-    int flag=0;
-    for(int i=0;i<a.length();i++){
-        if((a[i]=='0' && b[i]=='1')||(a[i]=='1' && b[i]=='0'))
-            flag++;
+int isXOR(string& a, string& b){
+    int flag10 = 0, flag01 = 0;
+    bool breakFlag = false;
+    for(int i=0; i<a.length(); i++){
+        if(a[i]=='0' && b[i]=='1')
+            flag01++;
+        else if(a[i]=='1' && b[i]=='0')
+            flag10++;
+        else if (a[i] != b[i])
+            breakFlag = true;
     }
-    return (flag==2);
+    if((flag10 == 1 && flag01 == 1) && !breakFlag)
+        return 1;
+    else if(((flag10 == 2 && flag01 == 0)|| (flag10 == 0 && flag01 == 2))&& !breakFlag)
+        return 2;
+    else
+        return 0;
 }
 
 
+/**Function*************************************************************
+   function to check if three terms have majority function
+***********************************************************************/
+unordered_map<int, int> isMAJ(string& a, string& b, string& c){
+    unordered_map<int, int> result;
+    bool jump_flag = false;
+    int flag11_ = 0, flag1_1 = 0, flag_11 = 0;
+    int flag00_ = 0, flag0_0 = 0, flag_00 = 0;
+    for(int i = 0; i < a.length(); i++){
+        if(a[i] == '1' && b[i] == '1' && c[i] == '-')   {
+            flag11_++;
+            result[i] = 1;
+        }
+        else if(a[i] == '1' && b[i] == '-' && c[i] == '1')   {
+            flag1_1++;
+            result[i] = 1;
+        }
+        else if(a[i] == '-' && b[i] == '1' && c[i] == '1')   {
+            flag_11++;
+            result[i] = 1;
+        }
+        else if(a[i] == '0' && b[i] == '0' && c[i] == '-')   {
+            flag00_++;
+            result[i] = 0;
+        }
+        else if(a[i] == '0' && b[i] == '-' && c[i] == '0')   {
+            flag0_0++;
+            result[i] = 0;
+        }
+        else if(a[i] == '-' && b[i] == '0' && c[i] == '0')   {
+            flag_00++;
+            result[i] = 0;
+        } else if(a[i] == b[i] && a[i] == c[i] && b[i]==c[i]){
+            continue;
+        }else{
+            jump_flag = true;
+        }
+    }
+
+    // only three 1 is MAJ
+    if(flag11_ + flag1_1 + flag_11 + flag00_ + flag0_0 + flag_00>3){
+        jump_flag = true;
+    }
+//    if(flag11_>1 || flag1_1 >1 || flag_11 > 1 || flag00_>1 || flag0_0>1 || flag_00>1){
+//        jump_flag = true;
+//    }
+
+
+
+    if(!jump_flag){
+        cout << "maj exist: " << a << " " << b << " " << c << "\t|\t" <<flag11_<<flag1_1<<flag_11<<flag00_<<flag0_0<<flag_00<< endl;
+        if(flag11_ == 1 && flag1_1 == 1 && flag_11 ==1)         return result;  // 0 inv
+        else if(flag00_ == 1 && flag_11 == 1 && flag1_1 ==1)    return result;  // 1 inv
+        else if(flag0_0 == 1 && flag_11 == 1 && flag11_ ==1)    return result;  // 1 inv
+        else if(flag00_ == 1 && flag1_1 == 1 && flag_11 ==1)    return result;  // 1 inv
+        else if(flag0_0 == 1 && flag11_ == 1 && flag_11 ==1)    return result;  // 1 inv
+        else if(flag_00 == 1 && flag1_1 == 1 && flag11_ ==1)    return result;  // 1 inv
+        else if(flag_00 == 1 && flag11_ == 1 && flag1_1 ==1)    return result;  // 1 inv
+        else if(flag00_ == 1 && flag_11 == 1 && flag0_0 ==1)    return result;  // 2 inv
+        else if(flag0_0 == 1 && flag_11 == 1 && flag00_ ==1)    return result;  // 2 inv
+        else if(flag00_ == 1 && flag1_1 == 1 && flag_00 ==1)    return result;  // 2 inv
+        else if(flag0_0 == 1 && flag11_ == 1 && flag_00 ==1)    return result;  // 2 inv
+        else if(flag_00 == 1 && flag1_1 == 1 && flag00_ ==1)    return result;  // 2 inv
+        else if(flag_00 == 1 && flag11_ == 1 && flag0_0 ==1)    return result;  // 2 inv
+        else if(flag00_ == 1 && flag_00 == 1 && flag0_0 ==1)    return result;  // 3 inv
+    }
+
+    result.clear();
+    return result;
+}
 
 /**Function*************************************************************
     replace complement terms with don't cares
@@ -91,18 +180,57 @@ string replace_complements(string a,string b){
 
 /**Function*************************************************************
     replace 01, 10 with XOR
-    Eg: 0110 and 0101 becomes 01^^
+    Eg: 0110 and 0101 becomes 01XX
 ***********************************************************************/
-string replace_XOR(string a,string b){
+string replace_XOR(string& a, string& b){
     string temp;
-    for(int i=0;i<a.length();i++)
+    for(int i=0;i<a.length();i++){
         if(a[i]!=b[i])
-            temp.append("^");
+            temp.append("X");
         else
             temp.push_back(a[i]);
+    }
     return temp;
 }
 
+
+/**Function*************************************************************
+    replace 00, 11 with XNOR
+    Eg: 0100 and 0111 becomes 01xx
+***********************************************************************/
+string replace_XNOR(string& a, string& b){
+    string temp;
+    for(int i=0;i<a.length();i++){
+        if(a[i]!=b[i])
+            temp.append("x");
+        else
+            temp.push_back(a[i]);
+    }
+    return temp;
+}
+
+
+
+/**Function*************************************************************
+    replace 11-, 1-1, -11 with MAJ
+    Eg: 11-, 1-1,and -11 becomes MMM
+***********************************************************************/
+string replace_MAJ(string& a, string& b, string& c, unordered_map<int, int> MAJIdxMap){
+    string temp;
+    for(int i=0; i<a.length(); i++){
+        if(a[i]==b[i] && a[i]==c[i] && b[i]==c[i]){
+            temp.push_back(a[i]);
+        }else{
+            if(MAJIdxMap[i] == 1)
+                temp.append("M");
+            else if (MAJIdxMap[i] == 0)
+                temp.append("m");
+            else
+                cout << "!!!check replace MAJ!!!" << endl;
+        }
+    }
+    return temp;
+}
 
 
 /**Function*************************************************************
@@ -135,55 +263,180 @@ bool VectorsEqual(vector<string> a,vector<string> b){
 
 
 /**Function*************************************************************
-    reduce in_LUT
+    reduce implicants with greycode check
 ***********************************************************************/
-vector<string> reduce(vector<string> in_LUT){
+vector<string> reduce(vector<string>& implicants){
     vector<string> greyCombine;
-    vector<string> xorCombine;
-    int sizeLUT=in_LUT.size();
-    int* checkLUT = new int[sizeLUT];
+    string tempImplicant;
 
-    //If a grey code pair is found, replace the differing bits with don't cares '-'.
-    for(int i=0; i < sizeLUT; i++){
-        for(int j=i; j < sizeLUT; j++){
-            if(isGreyCode(in_LUT[i], in_LUT[j])){
-                checkLUT[i]=1;
-                checkLUT[j]=1;
-                if(!in_vector(greyCombine, replace_complements(in_LUT[i], in_LUT[j])))
-                    greyCombine.push_back(replace_complements(in_LUT[i], in_LUT[j]));
+    //{1 0} pair -> '-'
+    int sizeLUT = implicants.size();
+    int* checkGrey = new int[sizeLUT]();
+    for(int i = 0; i < sizeLUT; i++){
+        for(int j = i+1; j < sizeLUT; j++){
+            if(isGreyCode(implicants[i], implicants[j])){
+                checkGrey[i] = 1, checkGrey[j] = 1;
+                tempImplicant = replace_complements(implicants[i], implicants[j]);
+                if(!in_vector(greyCombine, tempImplicant)) greyCombine.push_back(tempImplicant);
             }
         }
     }
-    for(int i=0; i < sizeLUT; i++){
-        if(checkLUT[i] != 1 && ! in_vector(greyCombine, in_LUT[i]))
-            greyCombine.push_back(in_LUT[i]);
+
+    for(int i = 0; i < sizeLUT; i++){
+        if(checkGrey[i] != 1 && ! in_vector(greyCombine, implicants[i]))
+            greyCombine.push_back(implicants[i]);
     }
+//    cout << "grey Combine: ";
+//    for(const auto& x : greyCombine) cout <<  x << " "; cout << endl;
 
-
-//    majority
-
-
-    //If a {10 01} pair is found, replace the it with '^'.
-    int sizeGrey=greyCombine.size();
-    int* checkGrey = new int[sizeGrey];
-    for(int i=0; i < sizeGrey; i++){
-        for(int j=i; j < sizeGrey; j++){
-            if(isXOR(greyCombine[i], greyCombine[j])){
-                checkGrey[i]=1;
-                checkGrey[j]=1;
-                if(!in_vector(xorCombine, replace_XOR(greyCombine[i], greyCombine[j])))
-                    xorCombine.push_back(replace_XOR(greyCombine[i], greyCombine[j]));
-            }
-        }
-    }
-    for(int i=0; i < sizeGrey; i++){
-        if(checkGrey[i] != 1 && ! in_vector(xorCombine, greyCombine[i]))
-            xorCombine.push_back(greyCombine[i]);
-    }
-
-    //appending all reduced terms to a new vector
-    delete[] checkLUT;
+    //delete the dynamic arrays
     delete[] checkGrey;
+    return greyCombine;
+}
+
+
+/**Function*************************************************************
+    reduce greyCombine with MAJ check
+***********************************************************************/
+vector<string> MAJ_Reduce(vector<string>& greyCombine){
+    vector<string> majCombine;
+    string tempImplicant;
+
+    // Majority check M: not inv; m: inv
+    int sizeGrey = greyCombine.size();
+    int* checkMAJ = new int[sizeGrey]();
+    if(sizeGrey >= 3){
+        for(int i = 0; i < sizeGrey; i++){
+            if(greyCombine[i].find('X')!= string::npos || greyCombine[i].find('x') != string::npos)
+                continue;
+            for(int j = i+1; j < sizeGrey; j++){
+                for(int k = j+1; k < sizeGrey; k++){
+                    unordered_map<int, int> MAJIdxMap = isMAJ(greyCombine[i], greyCombine[j], greyCombine[k]);
+                    if(!MAJIdxMap.empty()){
+                        checkMAJ[i] = 1, checkMAJ[j] = 1, checkMAJ[k] = 1;
+                        tempImplicant = replace_MAJ(greyCombine[i], greyCombine[j], greyCombine[k], MAJIdxMap);
+                        if(!in_vector(majCombine, tempImplicant)) majCombine.push_back(tempImplicant);
+                    }
+                }
+            }
+        }
+    }
+    for(int i = 0; i < sizeGrey; i++){
+        if(checkMAJ[i] != 1 && ! in_vector(majCombine, greyCombine[i]))
+            majCombine.push_back(greyCombine[i]);
+    }
+
+//    cout << "MAJ Combine: ";
+//    for(const auto& x : majCombine) cout <<  x << " "; cout << endl;
+
+    //delete the dynamic arrays
+    delete[] checkMAJ;
+    return majCombine;
+}
+
+
+
+
+/**Function*************************************************************
+    reduce majCombine with XOR/XNOR check
+***********************************************************************/
+vector<string> XOR_Reduce(vector<string>& majCombine){
+    vector<string> xorCombine;
+    string tempImplicant;
+
+    //{10 01} pair -> '^^'; {00 11} pair -> '@@'
+    int sizeMAJ = majCombine.size();
+    int* checkXOR_XNOR = new int[sizeMAJ]();        //initialize all elements to 0;
+    if(sizeMAJ>1){
+        for(int i = 0; i < sizeMAJ; i++){
+            if(majCombine[i].find('M')!= string::npos || majCombine[i].find('m') != string::npos)
+                continue;
+            for(int j = i+1; j < sizeMAJ; j++){
+                if(majCombine[j].find('M') != string::npos || majCombine[j].find('m') != string::npos)
+                    continue;
+                if(isXOR(majCombine[i], majCombine[j]) == 1){
+                    checkXOR_XNOR[i] += 1, checkXOR_XNOR[j] += 1;     // remove this two implicants
+                    tempImplicant = replace_XOR(majCombine[i], majCombine[j]);
+                    if(!in_vector(xorCombine, tempImplicant))
+                        xorCombine.push_back(tempImplicant);
+                } else if (isXOR(majCombine[i], majCombine[j]) == 2){
+                    checkXOR_XNOR[i] += 1, checkXOR_XNOR[j] += 1;     // remove this two implicants
+                    tempImplicant = replace_XNOR(majCombine[i], majCombine[j]);
+                    if(!in_vector(xorCombine, tempImplicant))
+                        xorCombine.push_back(tempImplicant);
+                }
+            }
+        }
+
+        vector<string> simp;
+        vector<int> sim_check;
+        vector<size_t> index_simp;
+        bool multicombination = false;
+        for(int item = 0; item < majCombine.size(); item++){
+            if(checkXOR_XNOR[item] > 0){
+                simp.push_back(majCombine[item]);
+                sim_check.push_back(checkXOR_XNOR[item]);
+                if(checkXOR_XNOR[item] > 1){
+                    multicombination = true;
+                }
+            }
+        }
+        for (size_t i = 0; i != simp.size(); ++i) { index_simp.push_back(i); }
+        assert(simp.size() == sim_check.size());
+
+        if(!multicombination){
+            simp.clear();
+            sim_check.clear();
+        } else{
+            xorCombine.clear();
+//            cout << "simp : "; for(const auto& x : simp) cout << x << " ";   cout << endl;
+//            cout << "simp_c : "; for(const auto& x : sim_check) cout << x << " ";   cout << endl;
+//            cout << "idx : "; for(const auto& x : index_simp) cout << x << " ";   cout << endl;
+            sort(index_simp.begin(), index_simp.end(), [&](size_t a, size_t b) { return sim_check[a] < sim_check[b];});
+//            cout << "simp : "; for(int i=0; i<simp.size(); i++) cout << simp[index_simp[i]] << " ";   cout << endl;
+//            cout << "simp_c : "; for(const auto& x : sim_check) cout << x << " ";   cout << endl;
+//            cout << "idx : "; for(const auto& x : index_simp) cout << x << " ";   cout << endl;
+
+            for(int i = 0; i < simp.size(); i++){
+                if(sim_check[index_simp[i]] == 0)
+                    continue;
+                for(int j = i+1; j < simp.size(); j++){
+                    if(sim_check[index_simp[i]] == 0 || sim_check[index_simp[j]] == 0)
+                        continue;
+                    if(isXOR(simp[index_simp[i]], simp[index_simp[j]]) == 1){
+                        tempImplicant = replace_XOR(simp[index_simp[i]], simp[index_simp[j]]);
+                        xorCombine.push_back(tempImplicant);
+                        sim_check[index_simp[i]] = 0;
+                        sim_check[index_simp[j]] = 0;
+                    }
+                    else if(isXOR(simp[index_simp[i]], simp[index_simp[j]]) == 2){
+                        tempImplicant = replace_XNOR(simp[index_simp[i]], simp[index_simp[j]]);
+                        xorCombine.push_back(tempImplicant);
+                        sim_check[index_simp[i]] = 0;
+                        sim_check[index_simp[j]] = 0;
+                    }
+                }
+            }
+            for(int i = 0; i < sim_check.size(); i++){
+                if(sim_check[i] != 0)
+                    xorCombine.push_back(simp[i]);
+            }
+
+            cout << "simp : "; for(const auto& x : simp) cout << x << " ";   cout << endl;
+            cout << "simpxorCombine : "; for(const auto& x : xorCombine) cout << x << " ";   cout << endl;
+        }
+
+    }
+    for(int i=0; i < sizeMAJ; i++){
+        if(checkXOR_XNOR[i] == 0 && ! in_vector(xorCombine, majCombine[i]))
+            xorCombine.push_back(majCombine[i]);
+    }
+
+//    cout << "XOR/XNOR Combine: ";
+//    for(const auto& x : xorCombine) cout <<  x << " "; cout << endl;
+
+    //delete the dynamic arrays
+    delete[] checkXOR_XNOR;
     return xorCombine;
 }
 
@@ -216,15 +469,45 @@ string getValue(string a, const string& dontcares, vector<node*>& fin_node){
 
 
 
-void BooleanExpressionCheck(vector<string> input_LUT, vector<string> updated_eqn, string dontcare, vector<node*>& fin_node){
+void BooleanExpressionCheck(vector<string> input_LUT, const string& dontcare, vector<node*>& fin_node){
     cout << "The reduced boolean expression in SOP form:" << endl;
     for (int i=0; i < input_LUT.size(); i++){
-        updated_eqn.push_back(getValue(input_LUT[i], dontcare, fin_node));
         cout << getValue(input_LUT[i], dontcare, fin_node);
         if (i!=input_LUT.size()-1)
             cout << "+";
         else
             cout << endl;
+    }
+}
+
+
+void Debugging(vector<string>& input_LUT, vector<string>& input_LUT_X, vector<string>& input_LUT_M, vector<int>& temp){
+    bool check_flag = false;
+    if(input_LUT_X.size() >= temp.size() && temp.size() != 2){
+        cout << "size not reduce: " << input_LUT_X.size() << " >= " << temp.size() << endl;
+        check_flag = true;
+    }
+
+    for(const auto& item : input_LUT_X){
+        int m_count = 0;
+        int x_count = 0;
+        for(auto c : item){
+            if(c == 'M' || c == 'm') m_count++;
+            if(c == 'X' || c == 'x') x_count++;
+        }
+        if(m_count > 3 || x_count > 2){
+            cout << "M > 3 || X > 2" << endl;
+            check_flag = true;
+        }
+        assert(m_count == 3 || m_count == 0);
+        assert(x_count == 2 || x_count == 0);
+    }
+
+    if(check_flag){
+        cout << "LUT : "; for(const auto& x : temp) cout <<  x << " ";   cout << endl;
+        cout << "Grey: "; for(const auto& x : input_LUT) cout <<  x << " ";   cout << endl;
+        cout << "MAJ : "; for(const auto& x : input_LUT_M) cout <<  x << " ";   cout << endl;
+        cout << "XOR : "; for(const auto& x : input_LUT_X) cout <<  x << " ";   cout << endl << endl;
     }
 }
 
@@ -235,25 +518,31 @@ void BooleanExpressionCheck(vector<string> input_LUT, vector<string> updated_eqn
 ***********************************************************************/
 vector<string> circuit::QM(vector<int>& temp, vector<node*>& fin_node){
     string dontcare;
+    vector<string> input_LUT, input_LUT_M, input_LUT_X;
+    vector<string> updated_eqn;
     int LUT_size = fin_node.size();
     dontcare.append(LUT_size, '-');
-    vector<string> input_LUT;
-    vector<string> updated_eqn;
+    input_LUT.reserve(temp.size());
+
+
+
     for(auto item: temp){
-        string x = pad(decToBin(item), LUT_size);
         input_LUT.push_back(pad(decToBin(item), LUT_size));
     }
-
     sort(input_LUT.begin(), input_LUT.end());
 
-    do{
-        input_LUT=reduce(input_LUT);
-//        cout << "while input_LUT: " << endl;
-//        for(const auto& i : input_LUT) cout << i << " ";  cout <<  endl;
-        sort(input_LUT.begin(), input_LUT.end());
-    }while(!VectorsEqual(input_LUT, reduce(input_LUT)));
 
-    BooleanExpressionCheck(input_LUT, updated_eqn, dontcare, fin_node);
-
-    return  input_LUT;
+    if(input_LUT.size() > 1){
+        do{
+            input_LUT=reduce(input_LUT);
+            sort(input_LUT.begin(), input_LUT.end());
+            if(input_LUT.size() == 1) break;
+        }while(!VectorsEqual(input_LUT, reduce(input_LUT)));
+    }
+    input_LUT_M = MAJ_Reduce(input_LUT);
+    input_LUT_X = XOR_Reduce(input_LUT_M);
+    Debugging(input_LUT, input_LUT_X, input_LUT_M, temp);
+    for(const auto& x : input_LUT_X) cout <<  x << " ";   cout << endl << endl;
+//    BooleanExpressionCheck(input_LUT_X, dontcare, fin_node);
+    return  input_LUT_X;
 }

@@ -10,9 +10,11 @@ void Node_Simulation(node* cur_node);
     Interface between LUT and QM
 ***********************************************************************/
 vector<string>circuit::LUT_TO_QM(){
-    vector<vector<int>>LUT = LUT_Generation();
     vector<int>LUT_output_high;
     vector<string> boolExpression;
+    vector<vector<int>>LUT;
+
+    LUT = LUT_Generation();
 
     for(int i=0; i<LUT.size(); i++){                        // k inputs, 1 outputs
         if(LUT[i][0]==1)   LUT_output_high.push_back(i);
@@ -24,7 +26,7 @@ vector<string>circuit::LUT_TO_QM(){
     }
     cout << endl;
 
-    if(LUT_output_high.size()>0){
+    if(!LUT_output_high.empty()){
         boolExpression = circuit::QM(LUT_output_high, Pinput);
     }
     LUT.clear();
@@ -93,17 +95,35 @@ void Node_Simulation(node* cur_node){
         case (2):       // XOR gate
             sum = 0;
             for (auto & unode : cur_node->unodes){
-                sum = sum^unode->val_sim;
+                if(unode->val_sim == 1){
+                    sum++;
+                }
             }
-            cur_node->val_sim = sum;
+            if(sum == 0 || sum == 2)
+                cur_node->val_sim = 0;
+            else if (sum == 1){
+                cur_node->val_sim = 1;
+            } else{
+                string errorMessage = "XOR fan-ins error";  // Exception
+                throw runtime_error(errorMessage);
+            }
             break;
 
         case (3):       // XNOR gate
-            sum = 1;
+            sum = 0;
             for (auto & unode : cur_node->unodes){
-                sum = sum^unode->val_sim;
+                if(unode->val_sim == 1){
+                    sum++;
+                }
             }
-            cur_node->val_sim = sum;
+            if(sum == 0 || sum == 2)
+                cur_node->val_sim = 1;
+            else if (sum == 1){
+                cur_node->val_sim = 0;
+            } else{
+                string errorMessage = "XNOR fan-ins error";  // Exception
+                throw runtime_error(errorMessage);
+            }
             break;
 
         case (4):       // OR gate

@@ -9,14 +9,22 @@
     Delete a Node
 ***********************************************************************/
 void circuit::Delete_Node(node* cur_node){
-    for(auto& up_node : cur_node->unodes){           // remove the connection with upnodes
-        if (find (up_node->dnodes.begin(), up_node->dnodes.end(), cur_node) != up_node->dnodes.end()){
-            Disconnect_Nodes(cur_node, up_node);
+    if(cur_node == nullptr){
+        cout << "this node already deleted" << endl;
+        return;
+    }
+
+    int sizeUP = cur_node->unodes.size();
+    int sizeDown = cur_node->dnodes.size();
+    for(int i = 0 ; i < sizeUP; i++){
+        if (find (cur_node->unodes[0]->dnodes.begin(), cur_node->unodes[0]->dnodes.end(), cur_node) != cur_node->unodes[0]->dnodes.end()){
+            Disconnect_Nodes(cur_node, cur_node->unodes[0]);
         }
     }
-    for(auto& down_node : cur_node->unodes){         // remove the connection with downnodes
-        if (find (down_node->dnodes.begin(), down_node->dnodes.end(), cur_node) != down_node->dnodes.end()){
-            circuit::Disconnect_Nodes(down_node, cur_node);
+
+    for(int i = 0 ; i < sizeDown; i++){
+        if (find (cur_node->dnodes[0]->unodes.begin(), cur_node->dnodes[0]->unodes.end(), cur_node) != cur_node->dnodes[0]->unodes.end()){
+            circuit::Disconnect_Nodes(cur_node->dnodes[0], cur_node);
         }
     }
 
@@ -31,7 +39,7 @@ void circuit::Delete_Node(node* cur_node){
     }
 
     nameToNode.erase(cur_node->node_name);
-    cout << "Node: " << cur_node->node_name << " are removed" << endl;
+//    cout << "Node: " << cur_node->node_name << " are removed" << endl;
     delete cur_node;
 }
 
@@ -98,7 +106,7 @@ void circuit::Fill_Cut_To_Circuit(circuit * LUTToCut){
             string name = "m" + to_string(newNodeNameCounter++);
             CNNTBNN[cur_node->node_name] = name;
             new_Node = Construct_Node(name, cur_node->gtype);
-            cout << "build: " << new_Node->node_name << "\t" << intToGate(new_Node->gtype) << endl;
+//            cout << "build: " << new_Node->node_name << "\t" << intToGate(new_Node->gtype) << endl;
         }
     }
     for(auto& cur_node : LUTToCut->Node_list){

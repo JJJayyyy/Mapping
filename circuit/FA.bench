@@ -1,0 +1,14 @@
+
+INPUT(a)
+INPUT(b)
+INPUT(c)
+
+
+OUTPUT(cin)
+
+1 = AND(a, b)
+2 = AND(a, c)
+3 = AND(c, b)
+cin = OR(1, 2, 3)
+
+

@@ -1,9 +1,13 @@
-INPUT(1)
+
 INPUT(g1)
 INPUT(g2)
+INPUT(g3)
+INPUT(g4)
+INPUT(g5)
 
-#OUTPUT(3)
-OUTPUT(g4)
+#OUTPUT(5)
+OUTPUT(6)
+
 #OUTPUT(5)
 #OUTPUT(6)
 #OUTPUT(7)
@@ -13,14 +17,14 @@ OUTPUT(g4)
 #OUTPUT(11)
 
 
+6 = AND(g1, g2, g3, g4, g5)
+#5 = AND(g1, g2, g3, g4)
 
-g3 = NOT(g1)
-g4 = NOT(g2)
-4 = AND(g1, g4)
-5 = AND(g3, g2)
-g5 = OR(4, 5)
-#5 = OR(g1, g2)
-#6 = NOR(g1, g2)
+#g3 = NOT(g1)
+#g4 = NOT(g3)
+#g5 = NOT(g4)
+#g6 = NOT(g2)
+#6 = NOR(g5, g2)
 #7 = XOR(g1, g2)
 #8 = XNOR(g1, g2)
 #9 = NOT(g1)
