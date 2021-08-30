@@ -2,13 +2,15 @@
 INPUT(a)
 INPUT(b)
 INPUT(c)
+INPUT(d)
 
 
 OUTPUT(cin)
 
 1 = AND(a, b)
-2 = AND(a, c)
-3 = AND(c, b)
+2 = AND(b, c)
+3 = AND(c, d)
+
 cin = OR(1, 2, 3)
 
 

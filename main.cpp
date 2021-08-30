@@ -21,82 +21,91 @@ int main(int argc, char *argv[]) {
 //    SFQmap = new circuit("../circuit/sim_test.bench", true);
 
 //    bench = new circuit("../circuit/sim_test.bench", true);
-    bench = new circuit("../circuit/FA.bench", true);
+//    bench = new circuit("../circuit/FA.bench", true);
 //    bench = new circuit("../circuit/c880.bench", true);
 //    bench = new circuit("../circuit/c17.bench", true);   //
 //    bench = new circuit("../circuit/s27.bench", true); //6.28->9.4
 
-//    baseline = new circuit("../circuit/c499.bench", true);   //
-//    SFQmap = new circuit("../circuit/c499.bench", true);   //
-//    bench = new circuit("../circuit/c499.bench", true);  // 3 = 4
+//    baseline = new circuit("../circuit/b04.bench", true);   //
+//    SFQmap = new circuit("../circuit/b04.bench", true);   //
+    bench = new circuit("../circuit/b04.bench", true);  //
+
+//    baseline = new circuit("../circuit/b11.bench", true);   //
+//    SFQmap = new circuit("../circuit/b11.bench", true);   //
+//    bench = new circuit("../circuit/b11.bench", true);  //
+
+//    baseline = new circuit("../circuit/b14.bench", true);   //
+//    SFQmap = new circuit("../circuit/b14.bench", true);   //
+//    bench = new circuit("../circuit/b14.bench", true);  //
 
 //    baseline = new circuit("../circuit/c880.bench", true);  //
 //    SFQmap = new circuit("../circuit/c880.bench", true);  //
-//    bench = new circuit("../circuit/c880.bench", true);  // 4
+//    bench = new circuit("../circuit/c880.bench", true);  //
 
 //    baseline = new circuit("../circuit/c1355.bench", true); //
 //    SFQmap = new circuit("../circuit/c1355.bench", true); //
-//    bench = new circuit("../circuit/c1355.bench", true); // 3 = 4
+//    bench = new circuit("../circuit/c1355.bench", true); //
 
 //    baseline = new circuit("../circuit/c1908.bench", true); //
 //    SFQmap = new circuit("../circuit/c1908.bench", true); //
-//    bench = new circuit("../circuit/c1908.bench", true); // 3
+//    bench = new circuit("../circuit/c1908.bench", true); //
 
 //    baseline = new circuit("../circuit/c2670.bench", true); //
 //    SFQmap = new circuit("../circuit/c2670.bench", true); //
-//    bench = new circuit("../circuit/c2670.bench", true); //3
+//    bench = new circuit("../circuit/c2670.bench", true); //
 
 //    baseline = new circuit("../circuit/c3540.bench", true); //
 //    SFQmap = new circuit("../circuit/c3540.bench", true); //
-//    bench = new circuit("../circuit/c3540.bench", true); //3
+//    bench = new circuit("../circuit/c3540.bench", true); //
 
 //    baseline = new circuit("../circuit/c5315.bench", true); //
 //    SFQmap = new circuit("../circuit/c5315.bench", true); //
-//    bench = new circuit("../circuit/c5315.bench", true); // 4
+//    bench = new circuit("../circuit/c5315.bench", true); //
 
 //    baseline = new circuit("../circuit/c6288.bench", true); //
 //    SFQmap = new circuit("../circuit/c6288.bench", true); //
-//    bench = new circuit("../circuit/c6288.bench", true); // 4
+//    bench = new circuit("../circuit/c6288.bench", true); //
 
 //    baseline = new circuit("../circuit/c7552.bench", true); //
 //    SFQmap = new circuit("../circuit/c7552.bench", true); //
-//    bench = new circuit("../circuit/c7552.bench", true); // 4
+//    bench = new circuit("../circuit/c7552.bench", true); //
 
 //    baseline = new circuit("../circuit/s1238.bench", true); //
 //    SFQmap = new circuit("../circuit/s1238.bench", true); //
-//    bench = new circuit("../circuit/s1238.bench", true); // 3
+//    bench = new circuit("../circuit/s1238.bench", true); //
 
 //    baseline = new circuit("../circuit/s1423.bench", true); //
 //    SFQmap = new circuit("../circuit/s1423.bench", true); //
-//    bench = new circuit("../circuit/s1423.bench", true); // 3
+//    bench = new circuit("../circuit/s1423.bench", true); //
 
 //    baseline = new circuit("../circuit/s1494.bench", true); //
 //    SFQmap = new circuit("../circuit/s1494.bench", true); //
-//    bench = new circuit("../circuit/s1494.bench", true); // 4
+//    bench = new circuit("../circuit/s1494.bench", true); //
 
 //    baseline = new circuit("../circuit/s5378.bench", true); //
 //    SFQmap = new circuit("../circuit/s5378.bench", true); //
-//    bench = new circuit("../circuit/s5378.bench", true); // 4D
+//    bench = new circuit("../circuit/s5378.bench", true); //
 
 //    baseline = new circuit("../circuit/s9234.bench", true); //
 //    SFQmap = new circuit("../circuit/s9234.bench", true); //
-//    bench = new circuit("../circuit/s9234.bench", true); //xxx
+//    bench = new circuit("../circuit/s9234.bench", true); //
 
 //    baseline = new circuit("../circuit/s13207.bench", true); //
 //    SFQmap = new circuit("../circuit/s13207.bench", true); //
-//    bench = new circuit("../circuit/s13207.bench", true); // bug
+//    bench = new circuit("../circuit/s13207.bench", true); //
 
 //    baseline = new circuit("../circuit/s35932.bench", true);
 //    SFQmap = new circuit("../circuit/s35932.bench", true);
-//    bench = new circuit("../circuit/s35932.bench", true);   // 3
+//    bench = new circuit("../circuit/s35932.bench", true);   //
 
 //    baseline = new circuit("../circuit/s38584.bench", true); //
 //    SFQmap = new circuit("../circuit/s38584.bench", true); //
-//    bench = new circuit("../circuit/s38584.bench", true); // xxx
+//    bench = new circuit("../circuit/s38584.bench", true); //
 
 
     if(baseline != nullptr){
         baseline->Highfanin_To_Low(faninSize);
+        baseline->Levelization();
         baseline->Depth_Balancing();
         baseline->Levelization();
         baselineOperation = true;
@@ -106,18 +115,18 @@ int main(int argc, char *argv[]) {
     if(SFQmap != nullptr){
         SFQmap = SFQmap_Alg(SFQmap, 3, faninSize);
         SFQmap->Highfanin_To_Low(faninSize);
-//        SFQmap->Levelization();
+        SFQmap->Levelization();
         SFQmap->Depth_Balancing();
         SFQmap->Levelization();
-//        SFQmap->pc();
         SFQmapOperation = true;
         cout << "SFQmap Done" << endl;
     }
 
     if(bench != nullptr){
         //    bench = Test_K_feasible_Cut(bench, 3);
-        bench = Test_Cut_Replacement(bench, 4, faninSize);
+        bench = Test_Cut_Replacement(bench, 3, faninSize);
         bench->Splitter_Insertion();
+        bench->Levelization();
         bench->Depth_Balancing();
         bench->Levelization();
         bench->Post_Optimization();
@@ -237,52 +246,56 @@ circuit* Test_Cut_Replacement(circuit* bench, int k, int faninSize){
             newCutName.append(to_string(idx));
             name.append("_cut_");
             name.append(to_string(idx++));
+
             //generate cut circuits {C}
             circuit* cut = Construct_Cut_Circuit(bench, currentCutPINames, root_node, name, faninSize);
+
             //convert {C} to simplified boolean functions {F}
             vector<string> LUT = cut->LUT_TO_QM();
-            assert(!LUT.empty());
+            if(LUT.empty())
+                continue;
+//            assert(!LUT.empty());
             vector<int> pi_levels;
             for(auto& pi : cut->Pinput){
                 pi_levels.push_back(pi->level);
-                cout << pi->node_name << " " << pi->level << endl;
+//                cout << pi->node_name << " " << pi->level << endl;
             }
             assert(currentCutPINames.size() == pi_levels.size());
+
             //generate a new cut circuit {C_new} based on {F}
             circuit* LUTToCut = Construct_LUT_Circuit(LUT, currentCutPINames, pi_levels, root_node->node_name, newCutName, faninSize);
 
-            circuit* cut1 = Construct_Cut_Circuit(bench, currentCutPINames, root_node, name, faninSize);
-            circuit* LUTToCut1 = Construct_LUT_Circuit(LUT, currentCutPINames,pi_levels, root_node->node_name, newCutName, faninSize);
+            //generate copy circuit of {C} and {C_new}
+            circuit* Copycut = Construct_Cut_Circuit(bench, currentCutPINames, root_node, name, faninSize);
+            circuit* CopyLUTToCut = Construct_LUT_Circuit(LUT, currentCutPINames, pi_levels, root_node->node_name, newCutName, faninSize);
 
-            cut1->splitterNameCounter = SPcounter;
-            cut1->SDFFNameCounter = DFFcounter;
-            cut1->Splitter_Insertion();
-            cut1->Levelization_By_PI();
-            cut1->Depth_Balancing();
-            cut1->Levelization_By_PI();
+            Copycut->splitterNameCounter = SPcounter;
+            Copycut->SDFFNameCounter = DFFcounter;
+            Copycut->Splitter_Insertion();
+            Copycut->Levelization_By_PI();
+            Copycut->Depth_Balancing();
+            Copycut->Levelization_By_PI();
             cout << "cut " << cut->circuit_name << " copy constructed" << endl;
 
-            LUTToCut1->splitterNameCounter = SPcounter;
-            LUTToCut1->SDFFNameCounter = DFFcounter;
-            LUTToCut1->Splitter_Insertion();
-            LUTToCut1->Levelization_By_PI();
-            LUTToCut1->Depth_Balancing();
-            LUTToCut1->Levelization_By_PI();
+            CopyLUTToCut->splitterNameCounter = SPcounter;
+            CopyLUTToCut->SDFFNameCounter = DFFcounter;
+            CopyLUTToCut->Splitter_Insertion();
+            CopyLUTToCut->Levelization_By_PI();
+            CopyLUTToCut->Depth_Balancing();
+            CopyLUTToCut->Levelization_By_PI();
             cout << "LUTcut " << LUTToCut->circuit_name << " copy constructed" << endl;
 
 
             //compare the PND between {C} and {C_new}
-            int cut_EDP = cut1->JJ_Calculation()* cut1->max_lvl;
-            int LUTToCut_EDP = LUTToCut1->JJ_Calculation() * LUTToCut1->max_lvl;
-//            int cut_EDP = cut->JJ_Calculation()* cut->max_lvl;
-//            int LUTToCut_EDP = LUTToCut->JJ_Calculation() * LUTToCut->max_lvl;
+            int cut_EDP = Copycut->JJ_Calculation() * Copycut->max_lvl;
+            int LUTToCut_EDP = CopyLUTToCut->JJ_Calculation() * CopyLUTToCut->max_lvl;
 
             cout << name << " PND: " << cut_EDP << "\t\t" << newCutName << " PND: " << LUTToCut_EDP << endl;
             if((cut_EDP - LUTToCut_EDP) > EDPImprovement){
                 delete ImprovementCut;
                 cout << "!!!!!!\nImprove: " << cut_EDP - LUTToCut_EDP << "\n!!!!!!" << endl;
-                cut1->pcGateOnly();
-                LUTToCut->pcGateOnly();
+//                Copycut->pc();
+//                CopyLUTToCut->pc();
                 EDPImprovement = cut_EDP - LUTToCut_EDP;
                 ImprovementCut = LUTToCut;
             }else {
@@ -290,8 +303,8 @@ circuit* Test_Cut_Replacement(circuit* bench, int k, int faninSize){
             }
             if(idx != rootNodeAllCutList.size()) cout << endl;
             delete cut;
-            delete cut1;
-            delete LUTToCut1;
+            delete Copycut;
+            delete CopyLUTToCut;
         }
         if(ImprovementCut != nullptr) cout << "improvement circuit: " << ImprovementCut->circuit_name << endl;
         cout << "///////////////////" << endl;
@@ -353,10 +366,13 @@ circuit* SFQmap_Alg(circuit* bench, int k, int faninSize){
 
             //convert {C} to simplified boolean functions {F}
             vector<string> LUT = cut->LUT_TO_QM();
-            assert(!LUT.empty());
+            if(LUT.empty())
+                continue;
+//            assert(!LUT.empty());
             vector<int> pi_levels;
             for(auto& pi : cut->Pinput){
-                pi_levels.push_back(pi->level);
+                pi_levels.push_back(1);
+//                pi_levels.push_back(pi->level);
             }
             assert(currentCutPINames.size() == pi_levels.size());
             //generate a new cut circuit {C_new} based on {F}
@@ -410,6 +426,7 @@ circuit* SFQmap_Alg(circuit* bench, int k, int faninSize){
 
 
 
+
 void LUT_To_NewCut(int fan_ins, int faninSize){
     int N = pow(2, fan_ins);
     string name;
@@ -446,6 +463,7 @@ void LUT_To_NewCut(int fan_ins, int faninSize){
         cout << endl;
 
         vector<int> pi_levels;
+        pi_levels.reserve(fin_node_names.size());
         for(auto& pi : fin_node_names){
             pi_levels.push_back(1);
         }
@@ -465,7 +483,6 @@ void LUT_To_NewCut(int fan_ins, int faninSize){
 
     for(auto x : fin_node) delete x;
 }
-
 
 
 void LUT_To_NewCut_Debugging(int fan_ins, int faninSize){

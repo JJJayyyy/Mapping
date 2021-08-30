@@ -3,8 +3,8 @@
 //
 vector<vector<string>> K_Feasible_Cut(node* root_node, int k);
 void Construct_Cut_Circuit_Helper(circuit* new_circuit, vector<string>& cutPI, node* cur_node, node* new_node);
-circuit* Construct_Cut_Circuit(circuit* bench, vector<string>& cutPI, vector<int>& PI_levels, node* rootNode, string& name, int faninSize);
-
+circuit* Construct_Cut_Circuit(circuit* bench, vector<string>& cutPI, node* rootNode, string& name, int faninSize);
+circuit* Construct_LUT_Circuit(vector<string>& implicantSet, vector<string>& PI, vector<int>& PI_levels, string& PO_name, string& name, int faninSize);
 
 
 void AddNodeIntoSet(unordered_set<string>& target_set, node* cur_node){
@@ -31,9 +31,8 @@ vector<vector<string>> K_Feasible_Cut(node* root_node, int k){
 
     cutPI.push_back(root_node);
     node* cur_node;
-    node *commonNode = nullptr;
     int idx = 0;
-    cout << "\nroot: " << root_node->node_name << endl;
+//    cout << "\nroot: " << root_node->node_name << endl;
     while(cutPI.size()>idx){
         bool flag = false;
         bool jump_flag = false;
@@ -41,68 +40,74 @@ vector<vector<string>> K_Feasible_Cut(node* root_node, int k){
 
         cur_node = cutPI[idx];
         unsigned long size = cutPI.size() - 1 + cur_node->unodes.size();
-        cout << "idx: " << idx << " currentNode: " << cur_node->node_name << endl;
-        cout << "Included set: ";
-        for(const auto& a : includeNode)
-            cout << a << "\t";
-        cout << endl;
+//        cout << "idx: " << idx << " currentNode: " << cur_node->node_name << endl;
+//        cout << "Included set: ";
+//        for(const auto& a : includeNode)
+//            cout << a << "\t";
+//        cout << endl;
 
         /*if a cutPI node has a same up stream node with other node's unode in the CutPI
         e.g cutPI = {a b c}, a's unode = {d e}; b's unode = {d f}; =>  cutPI = {c d e f}*/
         int commonCount = 0;
-        int i_idx = 0, j_idx = 0;
-        unordered_set<string> upstreamSet;
+        unordered_set<string> cutPI_UpStream_Set;
+        vector<node*> commonNodeSet;
         if(cutPI.size() > 1){
-            
-            for(int i = idx; i < cutPI.size(); i++){
-                for(int j = i+1; j < cutPI.size(); j++){
-                    for(auto& i_up : cutPI[i]->unodes){
-                        for(auto& j_up : cutPI[j]->unodes){
-                            if(i_up->node_name == j_up->node_name){
-                                commonNode = i_up;
-                                commonCount++;
-                                i_idx = i;
-                                j_idx = j;
-                            }
-                        }
+            for(auto &cur : cutPI){
+                for(auto &up_cur : cur->unodes){
+                    if(cutPI_UpStream_Set.find(up_cur->node_name) == cutPI_UpStream_Set.end()){
+                        AddNodeIntoSet(cutPI_UpStream_Set, up_cur);
+                    }else{
+                        commonNodeSet.push_back(up_cur);
+                        commonCount++;
                     }
                 }
             }
-            if(commonCount==1){
-                int special_size = idx + int(cutPI[i_idx]->unodes.size() + cutPI[j_idx]->unodes.size()) - 1;
-                if(k >= special_size)  specialFlag = true;
+            if(commonCount > 0){
+                if(k >= cutPI_UpStream_Set.size())
+                    specialFlag = true;
             }
         }
 
 
         if(specialFlag){
-            cutPI.push_back(commonNode);
-            for(auto i_up : cutPI[i_idx]->unodes){
-                if(i_up->node_name != commonNode->node_name){
-                    bool add = true;
-                    for(const auto & i_up_find : cutPI){
-                        if(i_up_find->node_name == i_up->node_name) add = false;
-                    }
-                    if(add){
-                        cutPI.push_back(i_up);
+            vector<string> commonNodeNameSet;
+            for(auto &common : commonNodeSet){
+                commonNodeNameSet.push_back(common->node_name);
+                cutPI.push_back(common);
+//                cout << "add common: " <<  common->node_name << endl;
+            }
+            vector<string> nodeHaveCommonUpNameSet;
+            vector<node*> nodeHaveCommonUpSet;
+            for(auto &cur : cutPI){
+                for(auto &up_cur : cur->unodes) {
+                    for(auto &common : commonNodeSet){
+                        if(common->node_name == up_cur->node_name){
+                            if(find(nodeHaveCommonUpNameSet.begin(), nodeHaveCommonUpNameSet.end(), cur->node_name)==nodeHaveCommonUpNameSet.end()){
+                                nodeHaveCommonUpSet.push_back(cur);
+                                nodeHaveCommonUpNameSet.push_back(cur->node_name);
+                            }
+                        }
                     }
                 }
             }
-            for(auto j_up : cutPI[j_idx]->unodes){
-                if(j_up->node_name != commonNode->node_name){
-                    bool add = true;
-                    for(const auto & j_up_find : cutPI){
-                        if(j_up_find->node_name == j_up->node_name) add = false;
+
+            for(auto &cur : nodeHaveCommonUpSet){
+                for(auto &up_cur : cur->unodes){
+                    if(find(commonNodeNameSet.begin(), commonNodeNameSet.end(), up_cur->node_name)==commonNodeNameSet.end()){
+                        cutPI.push_back(up_cur);
+//                        cout << "add else: " <<  up_cur->node_name << endl;
                     }
-                    if(add)
-                        cutPI.push_back(j_up);
                 }
             }
-            AddNodeIntoSet(includeNode, cutPI[j_idx]);
-            AddNodeIntoSet(includeNode, cutPI[i_idx]);
-            cutPI.erase(remove(cutPI.begin(), cutPI.end(), cutPI[j_idx]), cutPI.end());
-            cutPI.erase(remove(cutPI.begin(), cutPI.end(), cutPI[i_idx]), cutPI.end());
+            for(auto &cur : nodeHaveCommonUpSet){
+                AddNodeIntoSet(includeNode, cur);
+                cutPI.erase(remove(cutPI.begin(), cutPI.end(), cur), cutPI.end());
+            }
             flag = true;
+            commonNodeSet.clear();
+            nodeHaveCommonUpSet.clear();
+            commonNodeNameSet.clear();
+            nodeHaveCommonUpNameSet.clear();
         } else{
             /*if a cutPI node's unodes has a same node which is already in the CutPI: jump_flag => true
         e.g cutPI = {a b c}, a's unode = {c d};*/
@@ -148,16 +153,13 @@ vector<vector<string>> K_Feasible_Cut(node* root_node, int k){
                 cutPI.erase(remove(cutPI.begin(), cutPI.end(), cur_node), cutPI.end());
             }else if (!jump_flag && !cur_node->unodes.empty() && size <= k
                       && cur_node->gtype == circuit::gateToInt("SP")){
-                cout << "SP: " << cur_node->node_name <<endl;
                 bool SP_add_flag = true;
                 // exit the sp dnode not in includeSet
                 for(auto& down_node : cur_node->dnodes){
                     if(includeNode.find(down_node->node_name) == includeNode.end()){
-                        cout << down_node->node_name << " not in include Set" << endl;
                         SP_add_flag = false;
                     }
                 }
-                cout << cur_node->node_name << "\tadd flag: " << SP_add_flag << endl;
                 if(SP_add_flag){
                     for(auto& up_node : cur_node->unodes){
                         cutPI.push_back(up_node);
@@ -174,29 +176,28 @@ vector<vector<string>> K_Feasible_Cut(node* root_node, int k){
             }
         }
 
+//        cout << "size: " << cutPI.size() << "\tflag: " << flag << endl;
+//        cout << "cutPI: ";
+//        for (auto s : cutPI)
+//            cout << s->node_name <<"\t";
+//        cout << endl;
 
-//        int counter = 0;
-//        for(const auto& node : cutPI)
-//            if(node->node_name[0] == 'M') counter++;
-//        if(counter == cutPI.size())
-//            flag = false;
-
-
-        cout << "size: " << cutPI.size() << "\tflag: " << flag << endl;
-        cout << "cutPI: ";
-        for (auto s : cutPI)
-            cout << s->node_name <<"\t";
-        cout << endl;
-        assert(cutPI.size() <= k);
-        if(flag)    cutPIList.push_back(cutPI);     // add current cutPI to cutPI list
+        if(cutPI.size() > k){
+            for(auto x : cutPI) cout << x->node_name << "\t";
+            break;
+//            string errorMessage = "cutPI size is larger than K";  // Exception
+//            throw runtime_error(errorMessage);
+        }
+        if(flag)
+            cutPIList.push_back(cutPI);     // add current cutPI to cutPI list
     }
 
     // remove the cut which is just the upstream node of root_node
     if(!cutPIList.empty()){
-        for(auto & i : cutPIList){
+        for(auto & cutpi : cutPIList){
             vector<string>cutPIName;
             int PICounter = 0;
-            for(auto & j : i){
+            for(auto & j : cutpi){
                 cutPIName.push_back(j->node_name);
                 auto pi_find = find(rootUnodeNameList.begin( ), rootUnodeNameList.end( ), j->node_name);
                 if(pi_find != rootUnodeNameList.end())  PICounter++;
@@ -280,10 +281,14 @@ void Construct_Cut_Circuit_Helper(circuit* new_circuit, vector<string>& cutPI, n
     else{
         new_up_node = new_circuit->nameToNode[cur_node->node_name];
     }
+
     circuit::Connect_Nodes(new_node, new_up_node);
-    if(pi_find == cutPI.end())
-        for(auto& up_cur_node : cur_node->unodes)
+
+    if(pi_find == cutPI.end()){
+        for(auto& up_cur_node : cur_node->unodes){
             Construct_Cut_Circuit_Helper(new_circuit, cutPI, up_cur_node, new_up_node);
+        }
+    }
 }
 
 

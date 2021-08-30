@@ -78,6 +78,10 @@ void circuit:: pcGateOnly(){
     printf("\nMaximum level = %d\n", max_lvl);
     printf("Total JJs: %d\n", JJ_num);
     printf("PND value: %d\n", JJ_num * max_lvl);
+    cout << max_lvl << endl;
+    cout << JJ_num << endl;
+    cout <<JJ_num * max_lvl << endl;
+    cout << gateCounter["SDFF"] + gateCounter["NOT"] << endl;
     for(int i=0; i<25;i++)
         cout << "--";
     cout << endl;
@@ -87,7 +91,23 @@ void circuit:: pcGateOnly(){
     Connect two nodes
 ***********************************************************************/
 void circuit::Connect_Nodes(node *down_node, node *up_node) {
-    if(down_node->node_name != up_node->node_name){
+    if(down_node->node_name == up_node->node_name){
+        string errorMessage = "connection error: connect the same node: " + down_node->node_name;  // Exception
+        throw runtime_error(errorMessage);
+    }
+
+    bool alreadyConnectFlag = false;
+    for(auto& up_cur : down_node->unodes){
+        if(up_cur->node_name == up_node->node_name){
+            alreadyConnectFlag = true;
+        }
+    }
+    for(auto& down_cur : up_node->unodes){
+        if(down_cur->node_name == down_node->node_name){
+            alreadyConnectFlag = true;
+        }
+    }
+    if(!alreadyConnectFlag){
         up_node->dnodes.push_back(down_node);           // connect read_node with internode
         down_node->unodes.push_back(up_node);
 //        cout << "connect: " << up_node->node_name << " -> " << down_node->node_name << endl;
@@ -100,7 +120,23 @@ void circuit::Connect_Nodes(node *down_node, node *up_node) {
     disconnect two nodes
 ***********************************************************************/
 void circuit::Disconnect_Nodes(node *down_node, node *up_node){
-    if(down_node->node_name != up_node->node_name) {
+    if(down_node->node_name == up_node->node_name){
+        string errorMessage = "disconnection error: disconnect the same node: " + down_node->node_name;  // Exception
+        throw runtime_error(errorMessage);
+    }
+
+    bool NotDisconnectFlag = false;
+    for(auto& up_cur : down_node->unodes){
+        if(up_cur->node_name == up_node->node_name){
+            NotDisconnectFlag = true;
+        }
+    }
+    for(auto& down_cur : up_node->unodes){
+        if(down_cur->node_name == down_node->node_name){
+            NotDisconnectFlag = true;
+        }
+    }
+    if(NotDisconnectFlag){
         up_node->dnodes.erase(remove(up_node->dnodes.begin(), up_node->dnodes.end(), down_node),
                               up_node->dnodes.end()); // remove old connection
         down_node->unodes.erase(remove(down_node->unodes.begin(), down_node->unodes.end(), up_node),
