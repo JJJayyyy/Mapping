@@ -1,2 +1,2 @@
 # mapping
-mapping algorithm
+SFQ mapping algorithm
